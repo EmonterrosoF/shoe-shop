@@ -50,10 +50,15 @@ const productSchema = mongoose.Schema(
       required: true,
       default: 0,
     },
-    category: {
+    brand: {
       type: mongoose.Types.ObjectId,
       required: false,
-      ref: "Category",
+      ref: "Brand",
+    },
+    subCategory: {
+      type: mongoose.Types.ObjectId,
+      required: false,
+      ref: "SubCategory",
     },
   },
   {

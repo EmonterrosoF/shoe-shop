@@ -1,6 +1,6 @@
 import express from "express";
 
-import ImportData from "./DataImport.js";
+import firstBootRoute from "./Routes/FirstBoot.js";
 import productRoute from "./Routes/ProductRoutes.js";
 import { errorHandler, notFound } from "./Middleware/Errors.js";
 import userRouter from "./Routes/UserRoutes.js";
@@ -16,7 +16,8 @@ app.use(express.json());
 app.use(cors());
 
 // API
-app.use("/api/import", ImportData);
+app.use("/api/default", firstBootRoute);
+
 app.use("/api/products", productRoute);
 app.use("/api/users", userRouter);
 app.use("/api/orders", orderRouter);
