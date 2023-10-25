@@ -1,15 +1,13 @@
 import express from "express";
 import asyncHandler from "express-async-handler";
-import { admin, protect } from "../Middleware/AuthMiddleware.js";
+import { admin, protectedUser } from "../Middleware/AuthMiddleware.js";
 import Order from "./../Models/OrderModel.js";
 
 const orderRouter = express.Router();
 
 // CREATE ORDER
 orderRouter.post(
-  "/",
-  protect,
-  asyncHandler(async (req, res) => {
+  "/", protectedUser, async (req, res) => {
     const {
       orderItems,
       shippingAddress,
@@ -39,13 +37,13 @@ orderRouter.post(
       const createOrder = await order.save();
       res.status(201).json(createOrder);
     }
-  })
+  }
 );
 
 // ADMIN GET ALL ORDERS
 orderRouter.get(
   "/all",
-  protect,
+  protectedUser,
   admin,
   asyncHandler(async (req, res) => {
     const orders = await Order.find({})
@@ -57,7 +55,7 @@ orderRouter.get(
 // USER LOGIN ORDERS
 orderRouter.get(
   "/",
-  protect,
+  protectedUser,
   asyncHandler(async (req, res) => {
     const order = await Order.find({ user: req.user._id }).sort({ _id: -1 });
     res.json(order);
@@ -67,7 +65,7 @@ orderRouter.get(
 // GET ORDER BY ID
 orderRouter.get(
   "/:id",
-  protect,
+  protectedUser,
   asyncHandler(async (req, res) => {
     const order = await Order.findById(req.params.id).populate(
       "user",
@@ -86,7 +84,7 @@ orderRouter.get(
 // ORDER IS PAID
 orderRouter.put(
   "/:id/pay",
-  protect,
+  protectedUser,
   asyncHandler(async (req, res) => {
     const order = await Order.findById(req.params.id);
 
@@ -112,7 +110,7 @@ orderRouter.put(
 // ORDER IS PAID
 orderRouter.put(
   "/:id/delivered",
-  protect,
+  protectedUser,
   asyncHandler(async (req, res) => {
     const order = await Order.findById(req.params.id);
 
