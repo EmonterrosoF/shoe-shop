@@ -1,8 +1,9 @@
 import jwt from "jsonwebtoken";
-import asyncHandler from "express-async-handler";
 import User from "../Models/UserModel.js";
+import Customer from "../Models/CustomerModel.js";
 
-const protect = asyncHandler(async (req, res, next) => {
+// middleware que me permite verificar que el usuario este logueado
+export const protectedUser = async (req, res, next) => {
   let token;
 
   if (
@@ -26,9 +27,10 @@ const protect = asyncHandler(async (req, res, next) => {
     res.status(401);
     throw new Error("Not authorized, no token");
   }
-});
+}
 
-const admin = (req, res, next) => {
+// middleware que me permite verificar que el usuario es admin
+export const admin = (req, res, next) => {
   if (req.user && req.user.isAdmin) {
     next();
   } else {
@@ -36,4 +38,32 @@ const admin = (req, res, next) => {
     throw new Error("Not authorized as an Admin");
   }
 };
-export { protect, admin };
+
+
+// middleware que me permite verificar que el cliente este logueado
+export const protectedCustomer = async (req, res, next) => {
+  let token;
+
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    try {
+      token = req.headers.authorization.split(" ")[1];
+
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+      req.user = await Customer.findById(decoded.id).select("-password");
+      next();
+    } catch (error) {
+      console.error(error);
+      res.status(401);
+      throw new Error("Not authorized, token failed");
+    }
+  }
+  if (!token) {
+    res.status(401);
+    throw new Error("Not authorized, no token");
+  }
+}
+
