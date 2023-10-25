@@ -14,12 +14,14 @@ const userAdmin = {
 
 router.get("/", async (req, res) => {
 
+  const isFirstBoot = await FirstBoot.find({})
 
-  const isFirstBoot = await FirstBoot.find()
 
-  console.log(isFirstBoot)
+  if (isFirstBoot.length < 1) {
 
-  if (isFirstBoot.lenght < 0) {
+    const firstBoot = new FirstBoot({ firstBoot: true })
+    await firstBoot.save()
+
     const user = new User(userAdmin)
     await user.save()
   }
