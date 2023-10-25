@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
-const clientSchema = mongoose.Schema(
+const customerSchema = mongoose.Schema(
   {
     name: {
       type: String,
@@ -23,12 +23,12 @@ const clientSchema = mongoose.Schema(
 );
 
 // Login
-clientSchema.methods.matchPassword = async function (enterPassword) {
+customerSchema.methods.matchPassword = async function (enterPassword) {
   return await bcrypt.compare(enterPassword, this.password);
 };
 
 // Register
-clientSchema.pre("save", async function (next) {
+customerSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
     next();
   }
@@ -36,6 +36,6 @@ clientSchema.pre("save", async function (next) {
   this.password = bcrypt.hash(this.password, salt);
 });
 
-const Client = mongoose.model("Client", clientSchema);
+const Customer = mongoose.model("Customer", customerSchema);
 
-export default Client;
+export default Customer;
