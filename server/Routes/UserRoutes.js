@@ -1,6 +1,5 @@
 import express from "express";
-import asyncHandler from "express-async-handler";
-import { protect, admin } from "../Middleware/AuthMiddleware.js";
+import { admin, protectedUser } from "../Middleware/AuthMiddleware.js";
 import generateToken from "../utils/generateToken.js";
 import User from "../Models/UserModel.js";
 
@@ -8,8 +7,7 @@ const userRouter = express.Router();
 
 // LOGIN
 userRouter.post(
-  "/login",
-  asyncHandler(async (req, res) => {
+  "/login", async (req, res) => {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email });
@@ -27,15 +25,13 @@ userRouter.post(
       res.status(401);
       throw new Error("Invalid Email or Password");
     }
-  })
+  }
 );
 
 // REGISTER
-userRouter.post(
-  "/",
-  asyncHandler(async (req, res) => {
-    const { name, email, password } = req.body;
-
+userRouter.post("", async (req, res) => {
+  const { name, email, password } = req.body;
+  try {
     const userExists = await User.findOne({ email });
 
     if (userExists) {
@@ -61,14 +57,17 @@ userRouter.post(
       res.status(400);
       throw new Error("Invalid User Data");
     }
-  })
+  } catch (error) {
+    res.status(400)
+    throw new Error(error.message)
+  }
+}
 );
 
 // PROFILE
 userRouter.get(
   "/profile",
-  protect,
-  asyncHandler(async (req, res) => {
+  protectedUser, async (req, res) => {
     const user = await User.findById(req.user._id);
 
     if (user) {
@@ -83,14 +82,13 @@ userRouter.get(
       res.status(404);
       throw new Error("User not found");
     }
-  })
+  }
 );
 
 // UPDATE PROFILE
 userRouter.put(
   "/profile",
-  protect,
-  asyncHandler(async (req, res) => {
+  protectedUser, async (req, res) => {
     const user = await User.findById(req.user._id);
 
     if (user) {
@@ -112,18 +110,18 @@ userRouter.put(
       res.status(404);
       throw new Error("User not found");
     }
-  })
+  }
 );
 
 // GET ALL USER ADMIN
 userRouter.get(
   "/",
-  protect,
+  protectedUser,
   admin,
-  asyncHandler(async (req, res) => {
+  async (req, res) => {
     const users = await User.find({});
     res.json(users);
-  })
+  }
 );
 
 export default userRouter;
