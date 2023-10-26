@@ -15,17 +15,24 @@ export const protectedUser = async (req, res, next) => {
 
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      req.user = await User.findById(decoded.id).select("-password");
+      const user = await User.findById(decoded.id).select("-password");
+
+      if (!user) throw Error("User not found but token valid")
+
+      req.user = user
       next();
     } catch (error) {
       console.error(error);
       res.status(401);
-      throw new Error("Not authorized, token failed");
+      console.log(error.message)
+      const err = new Error("Not authorized, token failed");
+      next(err)
     }
   }
   if (!token) {
     res.status(401);
-    throw new Error("Not authorized, no token");
+    const error = new Error("Not authorized, no token");
+    next(error)
   }
 }
 
@@ -35,7 +42,8 @@ export const admin = (req, res, next) => {
     next();
   } else {
     res.status(401);
-    throw new Error("Not authorized as an Admin");
+    const error = new Error("Not authorized as an Admin");
+    next(error)
   }
 };
 
@@ -53,17 +61,24 @@ export const protectedCustomer = async (req, res, next) => {
 
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      req.user = await Customer.findById(decoded.id).select("-password");
+      const client = await Customer.findById(decoded.id).select("-password");
+
+      if (!client) throw Error("Customer not found but token valid")
+
+      req.user = client
       next();
     } catch (error) {
       console.error(error);
       res.status(401);
-      throw new Error("Not authorized, token failed");
+      console.log(error.message)
+      const err = new Error("Not authorized, token failed");
+      next(err)
     }
   }
   if (!token) {
     res.status(401);
-    throw new Error("Not authorized, no token");
+    const error = new Error("Not authorized, no token");
+    next(error)
   }
 }
 
