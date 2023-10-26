@@ -27,16 +27,14 @@ const userSchema = mongoose.Schema(
   }
 );
 
-// Login
+// se ejecuta para verificar la password con la cifrada de la db
 userSchema.methods.matchPassword = async function (enterPassword) {
   return await bcrypt.compare(enterPassword, this.password);
 };
 
-// Register
+// se ejecuta antes de guardar un usuario para cifrar la password
 userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) {
-    next();
-  }
+
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
 });
