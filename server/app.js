@@ -1,6 +1,6 @@
 import express from "express";
 
-import firstBootRoute from "./Routes/FirstBoot.js";
+import firstBootRoute from "./Routes/FirstBootRoutes.js";
 import productRoute from "./Routes/ProductRoutes.js";
 import { errorHandler, notFound } from "./Middleware/Errors.js";
 import userRouter from "./Routes/UserRoutes.js";
