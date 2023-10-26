@@ -1,24 +1,26 @@
 import express from "express";
-import asyncHandler from "express-async-handler";
-import { admin, protectedCustomer } from "../Middleware/AuthMiddleware.js";
+import { admin, protectedCustomer, protectedUser } from "../Middleware/AuthMiddleware.js";
 import generateToken from "../utils/generateToken.js";
 import Customer from "../Models/CustomerModel.js";
 import { ValidateData } from "../Middleware/validationDataMiddleware.js";
 import {
-  loginSchema,
-  registerSchema,
+  loginUserSchema,
+  registerUserSchema,
+  updateUserSchema,
 } from "../validations/userSchemaValidation.js";
 
 const router = express.Router();
 
-// LOGIN
-router.post("/login", ValidateData(loginSchema), async (req, res) => {
+// loguear cliente
+router.post("/login", ValidateData(loginUserSchema), async (req, res, next) => {
   const { email, password } = req.body;
 
   try {
     const customer = await Customer.findOne({ email });
 
-    if (customer && (await Customer.matchPassword(password))) {
+    const isMatchPassword = await customer.matchPassword(password)
+
+    if (customer && isMatchPassword) {
       res.json({
         _id: customer._id,
         name: customer.name,
@@ -33,11 +35,13 @@ router.post("/login", ValidateData(loginSchema), async (req, res) => {
     }
   } catch (error) {
     console.log(error.message);
+    const err = new Error("internal server error")
+    next(err)
   }
 });
 
 // registrar cliente
-router.post("/", ValidateData(registerSchema), async (req, res, next) => {
+router.post("/", ValidateData(registerUserSchema), async (req, res, next) => {
   const { name, email, password } = req.body;
 
   try {
@@ -63,37 +67,43 @@ router.post("/", ValidateData(registerSchema), async (req, res, next) => {
     });
   } catch (error) {
     console.log(error.message);
+    const err = new Error("internal server error")
+    next(err)
   }
 });
 
-// PROFILE
-router.get(
-  "/profile",
-  protectedCustomer,
-  asyncHandler(async (req, res) => {
-    const customer = await Customer.findById(req.customer._id);
+// obtener informacion del perfil
+router.get("/profile", protectedCustomer, async (req, res, next) => {
+  try {
+
+    const customer = req.user
 
     if (customer) {
       res.json({
         _id: customer._id,
         name: customer.name,
         email: customer.email,
-        isAdmin: customer.isAdmin,
         createdAt: customer.createdAt,
       });
     } else {
       res.status(404);
-      throw new Error("customer not found");
+      const error = new Error("user not found");
+      next(error)
     }
-  })
+  } catch (error) {
+    console.log(error.message)
+    const err = new Error("internal server error")
+    next(err)
+  }
+}
 );
 
-// UPDATE PROFILE
-router.put(
-  "/profile",
-  protectedCustomer,
-  asyncHandler(async (req, res) => {
-    const customer = await Customer.findById(req.customer._id);
+// actualizar el perfil del cliente
+router.put("/profile", protectedCustomer, ValidateData(updateUserSchema), async (req, res, next) => {
+
+  try {
+
+    const customer = await Customer.findById(req.user._id);
 
     if (customer) {
       customer.name = req.body.name || customer.name;
@@ -101,7 +111,7 @@ router.put(
       if (req.body.password) {
         customer.password = req.body.password;
       }
-      const updatedcustomer = await Customer.save();
+      const updatedcustomer = await customer.save();
       res.json({
         _id: updatedcustomer._id,
         name: updatedcustomer.name,
@@ -112,20 +122,22 @@ router.put(
       });
     } else {
       res.status(404);
-      throw new Error("customer not found");
+      const error = new Error("user not found");
+      next(error)
     }
-  })
+  } catch (error) {
+    console.log(error.message)
+    const err = new Error("internal server error")
+    next(err)
+  }
+}
 );
 
-// GET ALL customer ADMIN
-router.get(
-  "/",
-  protectedCustomer,
-  admin,
-  asyncHandler(async (req, res) => {
-    const customers = await Customer.find({});
-    res.json(customers);
-  })
+// obtener todos los clientes pero solo el usuario con rol de admin
+router.get("/", protectedUser, admin, async (req, res) => {
+  const customers = await Customer.find({});
+  res.json(customers);
+}
 );
 
 export default router;
