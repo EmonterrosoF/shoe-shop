@@ -1,0 +1,2 @@
+### creacion del usuario admin por defecto
+GET http://127.0.0.1:5000/api/default
