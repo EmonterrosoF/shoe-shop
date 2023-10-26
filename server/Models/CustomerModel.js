@@ -29,11 +29,11 @@ customerSchema.methods.matchPassword = async function (enterPassword) {
 
 // se ejecuta antes de guardar un cliente para cifrar la password
 customerSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) {
-    next();
-  }
+  // if (!this.isModified("password")) {
+  //   next();
+  // }
   const salt = await bcrypt.genSalt(10);
-  this.password = bcrypt.hash(this.password, salt);
+  this.password = await bcrypt.hash(this.password, salt)
 });
 
 const Customer = mongoose.model("Customer", customerSchema);
