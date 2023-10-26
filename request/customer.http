@@ -1,5 +1,6 @@
 
 ### registrar cliente
+
 POST http://127.0.0.1:5000/api/customers
 Content-Type: application/json
 
@@ -8,3 +9,14 @@ Content-Type: application/json
     "email": "prueba@prueba.com",
     "password": "123456"
 }
+
+### loguear cliente
+
+POST http://127.0.0.1:5000/api/customers/login
+Content-Type: application/json
+
+{
+    "email": "prueba@prueba.com",
+    "password": "123456"
+}
+
