@@ -1,22 +1,42 @@
 
-### registrar cliente
+@url = http://127.0.0.1:5000/api/customers
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1M2FjMzAwNDZkMjc3OTU4Yzk2M2I4YyIsImlhdCI6MTY5ODM1MTAzMCwiZXhwIjoxNzAwOTQzMDMwfQ.-72zpoTFgFF3iuV4sXebDt_FYJTImWxZCyy79IINfkU
 
-POST http://127.0.0.1:5000/api/customers
+### registrar cliente
+POST {{url}}
 Content-Type: application/json
 
 {
     "name": "prueba",
-    "email": "prueba@prueba.com",
+    "email": "prueba@prueba13.com",
     "password": "123456"
 }
 
 ### loguear cliente
-
-POST http://127.0.0.1:5000/api/customers/login
+POST {{url}}/login
 Content-Type: application/json
 
 {
-    "email": "prueba@prueba.com",
+    "email": "prueba@prueba13.com",
     "password": "123456"
 }
 
+
+### obtener el perfil del cliente
+GET {{url}}/profile
+Authorization: Bearer {{token}}
+
+### actualizar perfil del cliente
+PUT {{url}}/profile
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "name": "prueba actualizada",
+    "email": "prueba@prueba13.com",
+    "password": "123456"
+}
+
+### obtener todos los clientes solo el usuario con rol de admin
+GET {{url}}
+Authorization: Bearer {{token}}
