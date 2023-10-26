@@ -1,14 +1,14 @@
 import { Router } from "express";
 import User from "../Models/UserModel.js";
 import bcrypt from "bcryptjs";
-import FirstBoot from "../Models/FirstBoot.js";
+import FirstBoot from "../Models/FirstBootModel.js";
 
 const router = Router();
 
 const userAdmin = {
   name: "Admin",
   email: "admin@example.com",
-  password: bcrypt.hashSync("123456", 10),
+  password: "123456",
   isAdmin: true,
 }
 
