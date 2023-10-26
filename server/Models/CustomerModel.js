@@ -22,12 +22,12 @@ const customerSchema = mongoose.Schema(
   }
 );
 
-// Login
+// se ejecuta para verificar la password con la cifrada de la db
 customerSchema.methods.matchPassword = async function (enterPassword) {
   return await bcrypt.compare(enterPassword, this.password);
 };
 
-// Register
+// se ejecuta antes de guardar un cliente para cifrar la password
 customerSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
     next();
