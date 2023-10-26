@@ -2,17 +2,21 @@ import express from "express";
 import { admin, protectedUser } from "../Middleware/AuthMiddleware.js";
 import generateToken from "../utils/generateToken.js";
 import User from "../Models/UserModel.js";
+import { ValidateData } from "../Middleware/validationDataMiddleware.js";
+import { loginUserSchema, registerUserSchema } from "../validations/userSchemaValidation.js";
 
 const userRouter = express.Router();
 
-// LOGIN
-userRouter.post(
-  "/login", async (req, res) => {
-    const { email, password } = req.body;
+// loguear usuario
+userRouter.post("/login", ValidateData(loginUserSchema), async (req, res, next) => {
+  const { email, password } = req.body;
 
+  try {
     const user = await User.findOne({ email });
 
-    if (user && (await user.matchPassword(password))) {
+    const isMatchPassword = await user.matchPassword(password)
+
+    if (user && isMatchPassword) {
       res.json({
         _id: user._id,
         name: user.name,
@@ -23,65 +27,80 @@ userRouter.post(
       });
     } else {
       res.status(401);
-      throw new Error("Invalid Email or Password");
+      const error = new Error("Invalid Email or Password");
+      next(error)
     }
+
+  } catch (error) {
+    console.log(error.message)
+    const err = new Error("internal server error")
+    next(err)
   }
+
+}
 );
 
-// REGISTER
-userRouter.post("", async (req, res) => {
+// registrar usuario
+userRouter.post("/", protectedUser, admin, ValidateData(registerUserSchema), async (req, res, next) => {
   const { name, email, password } = req.body;
   try {
     const userExists = await User.findOne({ email });
 
     if (userExists) {
       res.status(400);
-      throw new Error("User already exists");
+      const error = new Error("User already exists");
+      next(error)
     }
 
     const user = await User.create({
       name,
       email,
       password,
+    })
+
+    res.status(201).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+      token: generateToken(user._id),
     });
 
-    if (user) {
-      res.status(201).json({
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        isAdmin: user.isAdmin,
-        token: generateToken(user._id),
-      });
-    } else {
-      res.status(400);
-      throw new Error("Invalid User Data");
-    }
   } catch (error) {
-    res.status(400)
-    throw new Error(error.message)
+    console.log(error.message);
+    const err = new Error("internal server error")
+    next(err)
   }
 }
 );
 
-// PROFILE
+// obtener informacion del perfil
 userRouter.get(
   "/profile",
-  protectedUser, async (req, res) => {
-    const user = await User.findById(req.user._id);
+  protectedUser, async (req, res, next) => {
+    try {
+      const user = req.user
 
-    if (user) {
-      res.json({
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        isAdmin: user.isAdmin,
-        createdAt: user.createdAt,
-      });
-    } else {
-      res.status(404);
-      throw new Error("User not found");
+      if (user) {
+        res.json({
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          isAdmin: user.isAdmin,
+          createdAt: user.createdAt,
+        });
+      } else {
+        res.status(404);
+        const error = new Error("user not found");
+        next(error)
+      }
+
+    } catch (error) {
+      console.log(error.message)
+      const err = new Error("internal server error")
+      next(err)
     }
+
   }
 );
 
@@ -113,7 +132,7 @@ userRouter.put(
   }
 );
 
-// GET ALL USER ADMIN
+// obtener todos los usuario pero solo el usuario con rol de admin
 userRouter.get(
   "/",
   protectedUser,
