@@ -1,7 +1,9 @@
 @url = http://127.0.0.1:5000/api/users
 @urlCustomer = http://127.0.0.1:5000/api/customers
+@urlProduct = http://127.0.0.1:5000/api/products
+@idProduct = 653c282041656419f272ee36
 
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1M2FlMDc2ZDZjMmY5YzRkZTE1MGIxNyIsImlhdCI6MTY5ODM1ODQ3NiwiZXhwIjoxNzAwOTUwNDc2fQ.l6wSswoCPKhn15LEFSyPV3IKU2wiLPl1DCcV_L6Z8iQ
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1M2FlMDc2ZDZjMmY5YzRkZTE1MGIxNyIsImlhdCI6MTY5ODM1ODQ3NiwiZXhwIjoxNzAwOTUwNDc2fQ.l6wSswoCPKhn15LEFSyPV3IKU2wiLPl1DCcV_L6Z8iQ
 
 
 ### login de usuario
@@ -15,7 +17,7 @@ Content-Type: application/json
 
 ### registrar usuario
 POST {{url}}
-Authorization: Bearer {{token}}
+Authorization: {{token}}
 Content-Type: application/json
 
 {
@@ -26,11 +28,11 @@ Content-Type: application/json
 
 ### obtener el perfil del usuario
 GET {{url}}/profile
-Authorization: Bearer {{token}}
+Authorization: {{token}}
 
 ### actualizar perfil del usuario
 PUT {{url}}/profile
-Authorization: Bearer {{token}}
+Authorization: {{token}}
 Content-Type: application/json
 
 {
@@ -40,10 +42,45 @@ Content-Type: application/json
 
 ### obtener todos los usuarios, solo puede el usuario con rol de admin
 GET {{url}}
-Authorization: Bearer {{token}}
+Authorization: {{token}}
 
 ### obtener todos los clientes, solo puede el usuario con rol de admin
 GET {{urlCustomer}}
-Authorization: Bearer {{token}}
+Authorization: {{token}}
+
+
+### obtener todos los productos pero solo usuarios logueados
+GET {{urlProduct}}/all HTTP/1.1
+Authorization: {{token}}
+
+### eliminar un producto pero solo usuario logueados
+DELETE  {{urlProduct}}/{{idProduct}} HTTP/1.1
+Authorization: {{token}}
+
+### crear producto
+POST  {{urlProduct}} HTTP/1.1
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+    "name": "Oxford Lisos",
+    "price": 500,
+    "description": "zapatos lisos",
+    "image": "https://www.corbataslester.com/magazine/wp-content/uploads/2018/01/oxford02.jpg",
+    "countInStock": 100
+}
+
+### actualizar producto
+PUT {{urlProduct}}/{{idProduct}} HTTP/1.1
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+    "name": "Oxford Lisos",
+    "price": 500,
+    "description": "zapatos lisos",
+    "image": "https://www.corbataslester.com/magazine/wp-content/uploads/2018/01/oxford02.jpg",
+    "countInStock": 100
+}
 
 

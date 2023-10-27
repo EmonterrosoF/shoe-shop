@@ -1,6 +1,8 @@
 
 @url = http://127.0.0.1:5000/api/customers
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1M2IwYTYyYzQ3OWQxNzk1YzhhZjIwOCIsImlhdCI6MTY5ODM2ODkwNCwiZXhwIjoxNzAwOTYwOTA0fQ.FlBm3zs8mfh2EIAOWEDzcx23hg8KNv7lVyauxiEWg2k
+@urlProduct = http://127.0.0.1:5000/api/products
+@idProduct = 653c282041656419f272ee36
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1M2IwYTYyYzQ3OWQxNzk1YzhhZjIwOCIsImlhdCI6MTY5ODM2ODkwNCwiZXhwIjoxNzAwOTYwOTA0fQ.FlBm3zs8mfh2EIAOWEDzcx23hg8KNv7lVyauxiEWg2k
 
 ### registrar cliente
 POST {{url}}
@@ -23,15 +25,26 @@ Content-Type: application/json
 
 ### obtener el perfil del cliente
 GET {{url}}/profile
-Authorization: Bearer {{token}}
+Authorization: {{token}}
 
 ### actualizar perfil del cliente
 PUT {{url}}/profile
-Authorization: Bearer {{token}}
+Authorization: {{token}}
 Content-Type: application/json
 
 {
     "name": "prueba dsfs",
     "email": "prueba@prueba13.com",
     "password": "123456"
+}
+
+
+### dar una review a un producto
+POST {{urlProduct}}/{{idProduct}}/review
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+    "rating": 5,
+    "comment": "good product"
 }
