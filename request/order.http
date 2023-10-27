@@ -1,0 +1,16 @@
+@url = http://127.0.0.1:5000/api/products
+@id = 653c282041656419f272ee36
+### obtener todos los productos
+GET {{url}}
+
+### obtener productos por query y numero de pagina
+GET {{url}}?pageNumber=1&keyword=Oxfo
+
+### obtener un unico producto por id
+GET {{url}}/{{id}}
+
+
+
+
+
+
