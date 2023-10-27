@@ -17,24 +17,24 @@ export const protectedUser = async (req, res, next) => {
 
       const user = await User.findById(decoded.id).select("-password");
 
-      if (!user) throw Error("User not found but token valid")
+      if (!user) throw Error("User not found but token valid");
 
-      req.user = user
+      req.user = user;
       next();
     } catch (error) {
       console.error(error);
       res.status(401);
-      console.log(error.message)
+      console.log(error.message);
       const err = new Error("Not authorized, token failed");
-      next(err)
+      next(err);
     }
   }
   if (!token) {
     res.status(401);
     const error = new Error("Not authorized, no token");
-    next(error)
+    next(error);
   }
-}
+};
 
 // middleware que me permite verificar que el usuario es admin
 export const admin = (req, res, next) => {
@@ -43,10 +43,9 @@ export const admin = (req, res, next) => {
   } else {
     res.status(401);
     const error = new Error("Not authorized as an Admin");
-    next(error)
+    next(error);
   }
 };
-
 
 // middleware que me permite verificar que el cliente este logueado
 export const protectedCustomer = async (req, res, next) => {
@@ -61,24 +60,23 @@ export const protectedCustomer = async (req, res, next) => {
 
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      const client = await Customer.findById(decoded.id).select("-password");
+      const customer = await Customer.findById(decoded.id).select("-password");
 
-      if (!client) throw Error("Customer not found but token valid")
+      if (!customer) throw Error("Customer not found but token valid");
 
-      req.user = client
+      req.user = customer;
       next();
     } catch (error) {
       console.error(error);
       res.status(401);
-      console.log(error.message)
+      console.log(error.message);
       const err = new Error("Not authorized, token failed");
-      next(err)
+      next(err);
     }
   }
   if (!token) {
     res.status(401);
     const error = new Error("Not authorized, no token");
-    next(error)
+    next(error);
   }
-}
-
+};

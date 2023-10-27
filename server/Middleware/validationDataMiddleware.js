@@ -1,13 +1,13 @@
 export const ValidateData = (schema) => (req, res, next) => {
-    try {
-        schema.parse({
-            body: req.body,
-            query: req.query,
-            params: req.params,
-        });
+  try {
+    schema.parse({
+      body: req.body,
+      params: req.params,
+    });
 
-        next();
-    } catch (err) {
-        return res.status(400).send(err.errors);
-    }
+    // req.query = schema.parse(req.query);
+    next();
+  } catch (err) {
+    return res.status(400).send(err.errors);
+  }
 };

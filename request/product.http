@@ -1,5 +1,10 @@
 
 ### obtener todos los productos
+GET http://127.0.0.1:5000/api/products?pageNumber=5&keyword=ad
 
-GET http://127.0.0.1:5000/api/products
+
+###
+GET http://127.0.0.1:5000/api/products/all HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1M2FlNGUzNmFiZjE3MDYxMmM5NWQ3MyIsImlhdCI6MTY5ODM3OTcwMSwiZXhwIjoxNzAwOTcxNzAxfQ.rOaKRuPyHgLYKM4Omv2plsLpDnSN6tF4wk5DZj9_v5E
+
 

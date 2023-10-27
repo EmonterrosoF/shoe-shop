@@ -16,7 +16,6 @@ app.use(express.json());
 
 app.use(cors());
 
-
 // API
 
 // ruta que nos sirve para agregar usuario admin por defecto
@@ -27,7 +26,7 @@ app.use("/api/default", firstBootRoute);
 app.use("/api/products", productRoute);
 
 app.use("/api/users", userRouter);
-app.use("/api/customers", customerRouter)
+app.use("/api/customers", customerRouter);
 app.use("/api/orders", orderRouter);
 app.get("/api/config/paypal", (req, res) => {
   console.log(PAYPAL_CLIENT_ID);

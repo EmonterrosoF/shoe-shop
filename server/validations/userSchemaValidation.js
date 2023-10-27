@@ -17,7 +17,7 @@ export const loginUserSchema = z.object({
 
 export const updateUserSchema = z.object({
   body: z.object({
-    name: z.string().optional(),
+    name: z.string().optional().optional(),
     email: z.string().email().optional(),
     password: z.string().min(6).optional(),
   }),
