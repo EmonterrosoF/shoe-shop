@@ -25,15 +25,22 @@ app.use("/api/default", firstBootRoute);
 // ruta para los productos
 app.use("/api/products", productRoute);
 
+// ruta para los usuarios
 app.use("/api/users", userRouter);
+
+// ruta para los clientes
 app.use("/api/customers", customerRouter);
+
+// ruta para las ordenes de los productos
 app.use("/api/orders", orderRouter);
+
+// ruta que me retorna el client id de paypal
 app.get("/api/config/paypal", (req, res) => {
   console.log(PAYPAL_CLIENT_ID);
   res.send(PAYPAL_CLIENT_ID);
 });
 
-// ERROR HANDLER
+// manejador de errores
 app.use(notFound);
 app.use(errorHandler);
 
