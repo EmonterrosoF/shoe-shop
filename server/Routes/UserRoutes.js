@@ -16,7 +16,7 @@ const userRouter = express.Router();
 // loguear usuario
 userRouter.post(
   "/login",
-  ValidateData(loginUserSchema),
+  ValidateData({ schema: loginUserSchema }),
   async (req, res, next) => {
     const { email, password } = req.body;
 
@@ -50,7 +50,7 @@ userRouter.post(
 // registrar usuario
 userRouter.post(
   "/",
-  ValidateData(registerUserSchema),
+  ValidateData({ schema: registerUserSchema }),
   protectedUser,
   admin,
   async (req, res, next) => {
@@ -113,7 +113,7 @@ userRouter.get("/profile", protectedUser, async (req, res, next) => {
 // actualizar el perfil del usuario
 userRouter.put(
   "/profile",
-  ValidateData(updateUserSchema),
+  ValidateData({ schema: updateUserSchema }),
   protectedUser,
   async (req, res, next) => {
     try {
