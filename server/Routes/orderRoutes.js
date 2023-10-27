@@ -2,12 +2,17 @@ import express from "express";
 import asyncHandler from "express-async-handler";
 import { admin, protectedUser } from "../Middleware/AuthMiddleware.js";
 import Order from "./../Models/OrderModel.js";
+import { ValidateData } from "../Middleware/validationDataMiddleware.js";
+import { createOrderSchema } from "../validations/orderSchemaValidation.js";
 
 const orderRouter = express.Router();
 
-// CREATE ORDER
+// crear una orden de un producto
 orderRouter.post(
-  "/", protectedUser, async (req, res) => {
+  "/",
+  ValidateData(createOrderSchema),
+  protectedUser,
+  async (req, res, next) => {
     const {
       orderItems,
       shippingAddress,
@@ -20,7 +25,8 @@ orderRouter.post(
 
     if (orderItems && orderItems.length === 0) {
       res.status(400);
-      throw new Error("No order items");
+      const error = new Error("No order items");
+      next(error);
       return;
     } else {
       const order = new Order({
@@ -29,7 +35,6 @@ orderRouter.post(
         shippingAddress,
         paymentMethod,
         itemsPrice,
-        taxPrice,
         shippingPrice,
         totalPrice,
       });
