@@ -35,7 +35,7 @@ const Login = ({ history }) => {
         <div className="card-body">
           {error && <Message variant="alert-danger">{error}</Message>}
           {loading && <Loading />}
-          <h4 className="card-title mb-4 text-center">Sign in</h4>
+          <h4 className="card-title mb-4 text-center">Iniciar Sesión</h4>
           <form onSubmit={submitHandler}>
             <div className="mb-3">
               <input
@@ -58,7 +58,7 @@ const Login = ({ history }) => {
 
             <div className="mb-4">
               <button type="submit" className="btn btn-primary w-100">
-                Login
+                Iniciar Sesión
               </button>
             </div>
           </form>

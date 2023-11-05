@@ -16,7 +16,7 @@ const CreateCategory = () => {
           />
         </div>
         <div className="mb-4">
-          <label className="form-label">Images</label>
+          <label className="form-label">Imagenes</label>
           <input className="form-control" type="file" />
         </div>
         <div className="mb-4">

@@ -7,7 +7,7 @@ const ExtraData = () => {
         <div className="card-body">
           {/* categories */}
           <>
-            <h5 className="mb-3">Categories</h5>
+            <h5 className="mb-3">Categorias</h5>
             <div className="form-check">
               <input
                 className="form-check-input"

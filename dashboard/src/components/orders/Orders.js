@@ -11,7 +11,7 @@ const Orders = (props) => {
           <th scope="col">Nombre</th>
           <th scope="col">Email</th>
           <th scope="col">Total</th>
-          <th scope="col">Pagado</th>
+          <th scope="col">Estado</th>
           <th scope="col">Fecha</th>
           <th>Estado</th>
           <th scope="col" className="text-end">
@@ -26,24 +26,24 @@ const Orders = (props) => {
               <b>{order.user.name}</b>
             </td>
             <td>{order.user.email}</td>
-            <td>${order.totalPrice}</td>
+            <td>Q{order.totalPrice}</td>
             <td>
               {order.isPaid ? (
                 <span className="badge rounded-pill alert-success">
-                  Paid At {moment(order.paidAt).format("MMM Do YY")}
+                  Pagado En {moment(order.paidAt).format("MMM Do YY")}
                 </span>
               ) : (
                 <span className="badge rounded-pill alert-danger">
-                  Not Paid
+                  No Pagado
                 </span>
               )}
             </td>
             <td>{moment(order.createdAt).format("MMM Do YY")}</td>
             <td>
               {order.isDelivered ? (
-                <span className="badge btn-success">Delivered</span>
+                <span className="badge btn-success">Entregado</span>
               ) : (
-                <span className="badge btn-dark">Not delivered</span>
+                <span className="badge btn-dark">No Entregado</span>
               )}
             </td>
             <td className="d-flex justify-content-end align-item-center">

@@ -89,7 +89,7 @@ const Header = () => {
                           to="#"
                           onClick={logoutHandler}
                         >
-                          Cerrar
+                          Cerrar Sesión
                         </Link>
                       </div>
                     </div>
@@ -126,7 +126,7 @@ const Header = () => {
                     <input
                       type="search"
                       className="form-control rounded search"
-                      placeholder="Search"
+                      placeholder="Buscar..."
                       onChange={(e) => setKeyword(e.target.value)}
                     />
                     <button type="submit" className="search-button">
@@ -151,7 +151,7 @@ const Header = () => {
                   <input
                     type="search"
                     className="form-control rounded search"
-                    placeholder="Search"
+                    placeholder="Buscar..."
                     onChange={(e) => setKeyword(e.target.value)}
                   />
                   <button type="submit" className="search-button">
@@ -181,7 +181,7 @@ const Header = () => {
                         to="#"
                         onClick={logoutHandler}
                       >
-                        Cerrar
+                        Cerrar Sesión
                       </Link>
                     </div>
                   </div>

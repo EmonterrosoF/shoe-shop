@@ -79,7 +79,7 @@ const OrderScreen = ({ match }) => {
                   </div>
                   <div className="col-md-8 center">
                     <h5>
-                      <strong>Customer</strong>
+                      <strong>Cliente</strong>
                     </h5>
                     <p>{order.user.name}</p>
                     <p>
@@ -133,7 +133,7 @@ const OrderScreen = ({ match }) => {
                       <strong>Entregar a </strong>
                     </h5>
                     <p>
-                     Dirección: {order.shippingAddress.city},{" "}
+                      Dirección: {order.shippingAddress.city},{" "}
                       {order.shippingAddress.address},{" "}
                       {order.shippingAddress.postalCode}
                     </p>
@@ -196,18 +196,18 @@ const OrderScreen = ({ match }) => {
                       </td>
                       <td>${order.itemsPrice}</td>
                     </tr>
-                    <tr>
+                    {/* <tr>
                       <td>
                         <strong>Envío</strong>
                       </td>
                       <td>Q{order.shippingPrice}</td>
-                    </tr>
-                    <tr>
+                    </tr> */}
+                    {/* <tr>
                       <td>
                         <strong>Impuesto</strong>
                       </td>
                       <td>${order.taxPrice}</td>
-                    </tr>
+                    </tr> */}
                     <tr>
                       <td>
                         <strong>Total</strong>

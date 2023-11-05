@@ -41,7 +41,7 @@ const Sidebar = () => {
                 to="/products"
               >
                 <i className="icon fas fa-shopping-bag"></i>
-                <span className="text">Products</span>
+                <span className="text">Productos</span>
               </NavLink>
             </li>
             <li className="menu-item">
@@ -51,7 +51,7 @@ const Sidebar = () => {
                 to="/addproduct"
               >
                 <i className="icon fas fa-cart-plus"></i>
-                <span className="text">Add product</span>
+                <span className="text">Agregar producto</span>
               </NavLink>
             </li>
             <li className="menu-item">
@@ -61,7 +61,7 @@ const Sidebar = () => {
                 to="/category"
               >
                 <i className="icon fas fa-list"></i>
-                <span className="text">Categories</span>
+                <span className="text">Categorias</span>
               </NavLink>
             </li>
             <li className="menu-item">
@@ -71,7 +71,7 @@ const Sidebar = () => {
                 to="/orders"
               >
                 <i className="icon fas fa-bags-shopping"></i>
-                <span className="text">Orders</span>
+                <span className="text">Ordenes</span>
               </NavLink>
             </li>
             <li className="menu-item">
@@ -81,10 +81,10 @@ const Sidebar = () => {
                 to="/users"
               >
                 <i className="icon fas fa-user"></i>
-                <span className="text">Users</span>
+                <span className="text">Clientes</span>
               </NavLink>
             </li>
-            <li className="menu-item">
+            {/* <li className="menu-item">
               <NavLink
                 activeClassName="active"
                 className="menu-link disabled"
@@ -104,7 +104,7 @@ const Sidebar = () => {
                 <i className="icon fas fa-usd-circle"></i>
                 <span className="text">Transactions</span>
               </NavLink>
-            </li>
+            </li> */}
           </ul>
           <br />
           <br />

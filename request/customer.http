@@ -2,6 +2,10 @@
 @url = http://127.0.0.1:5000/api/customers
 @urlProduct = http://127.0.0.1:5000/api/products
 @idProduct = 653c282041656419f272ee36
+
+@urlOrders = http://127.0.0.1:5000/api/orders
+@idOrders = 653c6fcc79bf88cd23ca33bf
+
 @token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1M2IwYTYyYzQ3OWQxNzk1YzhhZjIwOCIsImlhdCI6MTY5ODM2ODkwNCwiZXhwIjoxNzAwOTYwOTA0fQ.FlBm3zs8mfh2EIAOWEDzcx23hg8KNv7lVyauxiEWg2k
 
 ### registrar cliente
@@ -47,4 +51,45 @@ Content-Type: application/json
 {
     "rating": 5,
     "comment": "good product"
+}
+
+### realizar una orden de un producto
+POST {{urlOrders}}
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+   "orderItems": [{
+    "name": "z.string()",
+    "qty": 5,
+    "image": "z.string()",
+    "price": 200,
+    "product": "653c282041656419f272ee36"
+   }
+   ],
+  "shippingAddress": {
+    "address": "z.string()",
+    "city": "z.string()",
+    "postalCode": "z.string()",
+    "country": "z.string()"
+  },
+  "shippingPrice": 8,
+  "totalPrice": 10,
+  "taxPrice": 10
+}
+
+### obtiene las ordenenes realizadas del cliente pero es necesario estar logueado
+GET {{urlOrders}}
+Authorization: {{token}}
+
+### actualar la orden cuando se realiza el pago
+PUT {{urlOrders}}/{{idOrders}}/pay
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "id": "jdksksdkljl890890",
+  "status": "success",
+  "update_time": "17/12/2015",
+  "email_address": "jdksksdkljl890890@prueba.com"
 }

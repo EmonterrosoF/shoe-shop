@@ -22,10 +22,10 @@ const MainProducts = () => {
   return (
     <section className="content-main">
       <div className="content-header">
-        <h2 className="content-title">Products</h2>
+        <h2 className="content-title">Productos</h2>
         <div>
           <Link to="/addproduct" className="btn btn-primary">
-            Create new
+            Crear Producto
           </Link>
         </div>
       </div>
@@ -36,13 +36,13 @@ const MainProducts = () => {
             <div className="col-lg-4 col-md-6 me-auto ">
               <input
                 type="search"
-                placeholder="Search..."
+                placeholder="Buscar..."
                 className="form-control p-2"
               />
             </div>
             <div className="col-lg-2 col-6 col-md-3">
               <select className="form-select">
-                <option>All category</option>
+                <option>Todas las Categorias</option>
                 <option>Electronics</option>
                 <option>Clothings</option>
                 <option>Something else</option>
@@ -79,7 +79,7 @@ const MainProducts = () => {
             <ul className="pagination">
               <li className="page-item disabled">
                 <Link className="page-link" to="#">
-                  Previous
+                  Anterior
                 </Link>
               </li>
               <li className="page-item active">
@@ -99,7 +99,7 @@ const MainProducts = () => {
               </li>
               <li className="page-item">
                 <Link className="page-link" to="#">
-                  Next
+                  Siguiente
                 </Link>
               </li>
             </ul>

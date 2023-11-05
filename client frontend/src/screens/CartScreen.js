@@ -35,7 +35,7 @@ const CartScreen = ({ match, location, history }) => {
       <div className="container">
         {cartItems.length === 0 ? (
           <div className=" alert alert-info text-center mt-3">
-            Tu carrito esta vacío 
+            Tu carrito esta vacío
             <Link
               className="btn btn-success mx-5 px-5 py-3"
               to="/"
@@ -43,13 +43,13 @@ const CartScreen = ({ match, location, history }) => {
                 fontSize: "12px",
               }}
             >
-              COMPRA AHORA 
+              COMPRA AHORA
             </Link>
           </div>
         ) : (
           <>
             <div className=" alert alert-info text-center mt-3">
-              Total de productos del carrito 
+              Total de productos del carrito
               <Link className="text-success mx-2" to="/cart">
                 ({cartItems.length})
               </Link>
@@ -96,7 +96,7 @@ const CartScreen = ({ match, location, history }) => {
             {/* End of cart iterms */}
             <div className="total">
               <span className="sub">total:</span>
-              <span className="total-price">${total}</span>
+              <span className="total-price">Q{total}</span>
             </div>
             <hr />
             <div className="cart-buttons d-flex align-items-center row">

@@ -1,135 +1,201 @@
 import express from "express";
-import asyncHandler from "express-async-handler";
-import { admin, protectedUser } from "../Middleware/AuthMiddleware.js";
+import {
+  protectedCustomer,
+  protectedUser,
+} from "../Middleware/AuthMiddleware.js";
 import Order from "./../Models/OrderModel.js";
 import { ValidateData } from "../Middleware/validationDataMiddleware.js";
-import { createOrderSchema } from "../validations/orderSchemaValidation.js";
+import {
+  createOrderSchema,
+  paramsOrderSchema,
+  payOrderSchema,
+} from "../validations/orderSchemaValidation.js";
 
-const orderRouter = express.Router();
+const router = express.Router();
 
 // crear una orden de un producto
-orderRouter.post(
+router.post(
   "/",
-  ValidateData(createOrderSchema),
-  protectedUser,
+  ValidateData({ schema: createOrderSchema }),
+  protectedCustomer,
   async (req, res, next) => {
     const {
       orderItems,
       shippingAddress,
       paymentMethod,
-      itemsPrice,
-      taxPrice,
       shippingPrice,
       totalPrice,
     } = req.body;
 
-    if (orderItems && orderItems.length === 0) {
-      res.status(400);
-      const error = new Error("No order items");
-      next(error);
-      return;
-    } else {
-      const order = new Order({
-        orderItems,
-        user: req.user._id,
-        shippingAddress,
-        paymentMethod,
-        itemsPrice,
-        shippingPrice,
-        totalPrice,
-      });
+    try {
+      if (orderItems && orderItems.length === 0) {
+        res.status(400);
+        const error = new Error("No order items");
+        next(error);
+        return;
+      } else {
+        const order = new Order({
+          orderItems,
+          user: req.user._id,
+          shippingAddress,
+          paymentMethod,
+          shippingPrice,
+          totalPrice,
+        });
 
-      const createOrder = await order.save();
-      res.status(201).json(createOrder);
+        const createOrder = await order.save();
+        res.status(201).json(createOrder);
+      }
+    } catch (error) {
+      console.log(error.message);
+      const err = new Error("internal server error");
+      next(err);
     }
   }
 );
 
-// ADMIN GET ALL ORDERS
-orderRouter.get(
-  "/all",
-  protectedUser,
-  admin,
-  asyncHandler(async (req, res) => {
+// obtener todas las ordenes de los clientes, solo usuarios permitidos
+router.get("/all", protectedUser, async (req, res, next) => {
+  try {
     const orders = await Order.find({})
       .sort({ _id: -1 })
       .populate("user", "id name email");
     res.json(orders);
-  })
-);
-// USER LOGIN ORDERS
-orderRouter.get(
-  "/",
-  protectedUser,
-  asyncHandler(async (req, res) => {
+  } catch (error) {
+    console.log(error.message);
+    const err = new Error("internal server error");
+    next(err);
+  }
+});
+
+// obtiene las ordenes de un cliente, pero el cliente tiene que estar logueado
+router.get("/", protectedCustomer, async (req, res, next) => {
+  try {
     const order = await Order.find({ user: req.user._id }).sort({ _id: -1 });
     res.json(order);
-  })
-);
+  } catch (error) {
+    console.log(error.message);
+    const err = new Error("internal server error");
+    next(err);
+  }
+});
 
-// GET ORDER BY ID
-orderRouter.get(
+// obtener orden por id para los clientes
+router.get(
   "/:id",
-  protectedUser,
-  asyncHandler(async (req, res) => {
-    const order = await Order.findById(req.params.id).populate(
-      "user",
-      "name email"
-    );
+  ValidateData({ schema: paramsOrderSchema, type: "params" }),
+  protectedCustomer,
+  async (req, res, next) => {
+    try {
+      const order = await Order.findById(req.params.id).populate(
+        "user",
+        "name email"
+      );
 
-    if (order) {
-      res.json(order);
-    } else {
-      res.status(404);
-      throw new Error("Order Not Found");
+      if (order) {
+        res.json(order);
+      } else {
+        res.status(404);
+        const error = new Error("Order Not Found");
+        next(error);
+      }
+    } catch (error) {
+      console.log(error.message);
+      const err = new Error("internal server error");
+      next(err);
     }
-  })
+  }
 );
 
-// ORDER IS PAID
-orderRouter.put(
+// obtener orden por id para los usuarios
+router.get(
+  "/user/:id",
+  ValidateData({ schema: paramsOrderSchema, type: "params" }),
+  protectedUser,
+  async (req, res, next) => {
+    try {
+      const order = await Order.findById(req.params.id).populate(
+        "user",
+        "name email"
+      );
+
+      if (order) {
+        res.json(order);
+      } else {
+        res.status(404);
+        const error = new Error("Order Not Found");
+        next(error);
+      }
+    } catch (error) {
+      console.log(error.message);
+      const err = new Error("internal server error");
+      next(err);
+    }
+  }
+);
+
+// actualiza la orden, cuando la orden se paga
+router.put(
   "/:id/pay",
-  protectedUser,
-  asyncHandler(async (req, res) => {
-    const order = await Order.findById(req.params.id);
+  ValidateData({ schema: paramsOrderSchema, type: "params" }),
+  ValidateData({ schema: payOrderSchema }),
+  protectedCustomer,
+  async (req, res, next) => {
+    const { id, status, update_time, email_address } = req.body;
 
-    if (order) {
-      order.isPaid = true;
-      order.paidAt = Date.now();
-      order.paymentResult = {
-        id: req.body.id,
-        status: req.body.status,
-        update_time: req.body.update_time,
-        email_address: req.body.email_address,
-      };
+    try {
+      const order = await Order.findById(req.params.id);
+      if (order) {
+        order.isPaid = true;
+        order.paidAt = Date.now();
+        order.paymentResult = {
+          id,
+          status,
+          update_time,
+          email_address,
+        };
 
-      const updatedOrder = await order.save();
-      res.json(updatedOrder);
-    } else {
-      res.status(404);
-      throw new Error("Order Not Found");
+        const updatedOrder = await order.save();
+        res.json(updatedOrder);
+      } else {
+        res.status(404);
+        const error = new Error("Order Not Found");
+        next(error);
+      }
+    } catch (error) {
+      console.log(error.message);
+      const err = new Error("internal server error");
+      next(err);
     }
-  })
+  }
 );
 
-// ORDER IS PAID
-orderRouter.put(
+// actualiza la orden cuando ya esta pagada, y sirve cuando el producto fue entregado
+router.put(
   "/:id/delivered",
+  ValidateData({ schema: paramsOrderSchema, type: "params" }),
   protectedUser,
-  asyncHandler(async (req, res) => {
-    const order = await Order.findById(req.params.id);
+  async (req, res, next) => {
+    try {
+      const order = await Order.findById(req.params.id);
 
-    if (order) {
-      order.isDelivered = true;
-      order.deliveredAt = Date.now();
+      if (order) {
+        order.isDelivered = true;
+        order.deliveredAt = Date.now();
 
-      const updatedOrder = await order.save();
-      res.json(updatedOrder);
-    } else {
-      res.status(404);
-      throw new Error("Order Not Found");
+        const updatedOrder = await order.save();
+        res.json(updatedOrder);
+      } else {
+        res.status(404);
+        const error = new Error("Order Not Found");
+        next(error);
+      }
+    } catch (error) {
+      console.log(error.message);
+      const err = new Error("internal server error");
+      next(err);
     }
-  })
+  }
 );
 
-export default orderRouter;
+export default router;

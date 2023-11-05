@@ -20,7 +20,7 @@ const OrderMain = () => {
             <div className="col-lg-4 col-md-6 me-auto">
               <input
                 type="text"
-                placeholder="Search..."
+                placeholder="Buscar..."
                 className="form-control p-2"
               />
             </div>

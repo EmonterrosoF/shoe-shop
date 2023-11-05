@@ -2,13 +2,15 @@ import { z } from "zod";
 
 // para body
 export const createOrderSchema = z.object({
-  orderItems: z.array({
-    name: z.string(),
-    qty: z.number(),
-    image: z.string(),
-    price: z.number(),
-    product: z.string(),
-  }),
+  orderItems: z.array(
+    z.object({
+      name: z.string(),
+      qty: z.number(),
+      image: z.string(),
+      price: z.number(),
+      product: z.string().regex(new RegExp(/^[0-9a-fA-F]{24}$/)),
+    })
+  ),
   shippingAddress: z.object({
     address: z.string(),
     city: z.string(),
@@ -16,29 +18,19 @@ export const createOrderSchema = z.object({
     country: z.string(),
   }),
   paymentMethod: z.string().optional(),
-  shippingPrice: z.number(),
-  totalPrice: z.number(),
+  shippingPrice: z.string(),
+  totalPrice: z.string(),
 });
 
 // para body
-// export const updateProductSchema = z.object({
-//   name: z.string().optional(),
-//   price: z.number().optional(),
-//   description: z.string().optional(),
-//   image: z.string().optional(),
-//   countInStock: z.number().optional(),
-// });
+export const payOrderSchema = z.object({
+  id: z.string(),
+  status: z.string(),
+  update_time: z.string(),
+  // email_address: z.string(),
+});
 
-// // para querys
-// export const queryProductSchema = z.object({
-//   pageNumber: z
-//     .string()
-//     .regex(new RegExp(/^[0-9]+$/))
-//     .default("1"),
-//   keyword: z.string().default(""),
-// });
-
-// // para params
-// export const paramsProductSchema = z.object({
-//   id: z.string().regex(new RegExp(/^[0-9a-fA-F]{24}$/)),
-// });
+// para params
+export const paramsOrderSchema = z.object({
+  id: z.string().regex(new RegExp(/^[0-9a-fA-F]{24}$/)),
+});

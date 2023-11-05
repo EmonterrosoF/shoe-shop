@@ -2,17 +2,17 @@ import { z } from "zod";
 
 // para body
 export const reviewProductSchema = z.object({
-  rating: z.number(),
+  rating: z.string(),
   comment: z.string(),
 });
 
 // para body
 export const createProductSchema = z.object({
   name: z.string(),
-  price: z.number(),
+  price: z.string(),
   description: z.string(),
   image: z.string(),
-  countInStock: z.number(),
+  countInStock: z.string(),
 });
 
 // para body

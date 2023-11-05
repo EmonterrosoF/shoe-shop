@@ -33,7 +33,7 @@ const Orders = (props) => {
                   <tr>
                     <th>ID</th>
                     <th>STATUS</th>
-                    <th>DATE</th>
+                    <th>FECHA</th>
                     <th>TOTAL</th>
                   </tr>
                 </thead>
@@ -50,13 +50,13 @@ const Orders = (props) => {
                           {order._id}
                         </a>
                       </td>
-                      <td>{order.isPaid ? <>Paid</> : <>Not Paid</>}</td>
+                      <td>{order.isPaid ? <>Pagado</> : <>No Pagado</>}</td>
                       <td>
                         {order.isPaid
                           ? moment(order.paidAt).calendar()
                           : moment(order.createdAt).calendar()}
                       </td>
-                      <td>${order.totalPrice}</td>
+                      <td>Q{order.totalPrice}</td>
                     </tr>
                   ))}
                 </tbody>

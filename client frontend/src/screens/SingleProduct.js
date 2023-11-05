@@ -87,14 +87,14 @@ const SingleProduct = ({ history, match }) => {
                       {product.countInStock > 0 ? (
                         <span>En Stock</span>
                       ) : (
-                        <span>unavailable</span>
+                        <span>No disponible</span>
                       )}
                     </div>
                     <div className="flex-box d-flex justify-content-between align-items-center">
-                      <h6>Opiniones</h6>
+                      <h6>Valoraciones</h6>
                       <Rating
                         value={product.rating}
-                        text={`${product.numReviews} reviews`}
+                        text={`${product.numReviews} valoraciones`}
                       />
                     </div>
                     {product.countInStock > 0 ? (
@@ -132,7 +132,9 @@ const SingleProduct = ({ history, match }) => {
               <div className="col-md-6">
                 <h6 className="mb-3">Opiniones</h6>
                 {product.reviews.length === 0 && (
-                  <Message variant={"alert-info mt-3"}>No Reviews</Message>
+                  <Message variant={"alert-info mt-3"}>
+                    Sin valoraciones
+                  </Message>
                 )}
                 {product.reviews.map((review) => (
                   <div
@@ -198,7 +200,7 @@ const SingleProduct = ({ history, match }) => {
                     <Message variant={"alert-warning"}>
                       Por favor{" "}
                       <Link to="/login">
-                        " <strong>Login</strong> "
+                        " <strong>Inicia Sesión</strong> "
                       </Link>{" "}
                       Escribir una reseña{" "}
                     </Message>

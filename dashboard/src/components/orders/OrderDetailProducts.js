@@ -53,15 +53,15 @@ const OrderDetailProducts = (props) => {
           <td colSpan="4">
             <article className="float-end">
               <dl className="dlist">
-                <dt>Subtotal:</dt> <dd>${order.itemsPrice}</dd>
+                <dt>Subtotal:</dt> <dd>Q{order.itemsPrice}</dd>
               </dl>
               <dl className="dlist">
-                <dt>Consto de envio:</dt> <dd>${order.shippingPrice}</dd>
+                <dt>Consto de envio:</dt> <dd>Q{order.shippingPrice}</dd>
               </dl>
               <dl className="dlist">
                 <dt>Total:</dt>
                 <dd>
-                  <b className="h5">${order.totalPrice}</b>
+                  <b className="h5">Q{order.totalPrice}</b>
                 </dd>
               </dl>
               <dl className="dlist">

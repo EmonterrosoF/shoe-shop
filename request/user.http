@@ -3,6 +3,9 @@
 @urlProduct = http://127.0.0.1:5000/api/products
 @idProduct = 653c282041656419f272ee36
 
+@urlOrders = http://127.0.0.1:5000/api/orders
+@idOrder = 653c6fcc79bf88cd23ca33bf
+
 @token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1M2FlMDc2ZDZjMmY5YzRkZTE1MGIxNyIsImlhdCI6MTY5ODM1ODQ3NiwiZXhwIjoxNzAwOTUwNDc2fQ.l6wSswoCPKhn15LEFSyPV3IKU2wiLPl1DCcV_L6Z8iQ
 
 
@@ -83,4 +86,14 @@ Content-Type: application/json
     "countInStock": 100
 }
 
+### obtener todas las ordenes de los clientes
+GET {{urlOrders}}/all
+Authorization: {{token}}
 
+### obtener orden por id
+GET {{urlOrders}}/{{idOrder}}
+Authorization: {{token}}
+
+### actualar la orden con el pago
+PUT {{urlOrders}}/{{idOrder}}/delivered
+Authorization: {{token}}

@@ -15,7 +15,7 @@ const CategoriesTable = () => {
             <th>ID</th>
             <th>Nombre</th>
             <th>Descripción</th>
-            <th className="text-end">Action</th>
+            <th className="text-end">Acción</th>
           </tr>
         </thead>
         {/* Table Data */}
@@ -28,9 +28,9 @@ const CategoriesTable = () => {
             </td>
             <td>1</td>
             <td>
-              <b>Ropa de hombre</b>
+              <b>Zapatos para hombre</b>
             </td>
-            <td>Ropa de hombre</td>
+            <td>zapatos para hombre</td>
             <td className="text-end">
               <div className="dropdown">
                 <Link
@@ -42,7 +42,7 @@ const CategoriesTable = () => {
                 </Link>
                 <div className="dropdown-menu">
                   <Link className="dropdown-item" to="#">
-                   Editar información
+                    Editar información
                   </Link>
                   <Link className="dropdown-item text-danger" to="#">
                     Borrar
@@ -59,9 +59,9 @@ const CategoriesTable = () => {
             </td>
             <td>2</td>
             <td>
-              <b>Ropa para mujer </b>
+              <b>Zapatos para mujer </b>
             </td>
-            <td>Modas para mujer</td>
+            <td>Zapatos para mujer</td>
 
             <td className="text-end">
               <div className="dropdown">
@@ -91,9 +91,41 @@ const CategoriesTable = () => {
             </td>
             <td>3</td>
             <td>
-              <b>Ropa para niños</b>
+              <b>Zapatos para niñas</b>
             </td>
-            <td>Ropa para niños</td>
+            <td>Zapatos para niñas</td>
+
+            <td className="text-end">
+              <div className="dropdown">
+                <Link
+                  to="#"
+                  data-bs-toggle="dropdown"
+                  className="btn btn-light"
+                >
+                  <i className="fas fa-ellipsis-h"></i>
+                </Link>
+                <div className="dropdown-menu">
+                  <Link className="dropdown-item" to="#">
+                    Editar información
+                  </Link>
+                  <Link className="dropdown-item text-danger" to="#">
+                    Borrar
+                  </Link>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div className="form-check">
+                <input className="form-check-input" type="checkbox" value="" />
+              </div>
+            </td>
+            <td>3</td>
+            <td>
+              <b>Zapatos para niños</b>
+            </td>
+            <td>Zapatos para niños</td>
 
             <td className="text-end">
               <div className="dropdown">

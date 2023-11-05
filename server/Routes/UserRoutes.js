@@ -11,10 +11,10 @@ import {
 
 import bcrypt from "bcryptjs";
 
-const userRouter = express.Router();
+const router = express.Router();
 
 // loguear usuario
-userRouter.post(
+router.post(
   "/login",
   ValidateData({ schema: loginUserSchema }),
   async (req, res, next) => {
@@ -48,7 +48,7 @@ userRouter.post(
 );
 
 // registrar usuario
-userRouter.post(
+router.post(
   "/",
   ValidateData({ schema: registerUserSchema }),
   protectedUser,
@@ -86,7 +86,7 @@ userRouter.post(
 );
 
 // obtener informacion del perfil
-userRouter.get("/profile", protectedUser, async (req, res, next) => {
+router.get("/profile", protectedUser, async (req, res, next) => {
   try {
     const user = req.user;
 
@@ -111,7 +111,7 @@ userRouter.get("/profile", protectedUser, async (req, res, next) => {
 });
 
 // actualizar el perfil del usuario
-userRouter.put(
+router.put(
   "/profile",
   ValidateData({ schema: updateUserSchema }),
   protectedUser,
@@ -149,10 +149,10 @@ userRouter.put(
 );
 
 // obtener todos los usuario pero solo el usuario con rol de admin
-userRouter.get("/", protectedUser, admin, async (req, res) => {
+router.get("/", protectedUser, admin, async (req, res) => {
   const user = req.user;
   const users = await User.find({ _id: { $ne: user._id } }).select("-password");
   res.json(users);
 });
 
-export default userRouter;
+export default router;
