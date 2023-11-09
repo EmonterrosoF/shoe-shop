@@ -20,6 +20,7 @@ const ShopSection = (props) => {
   return (
     <>
       <div className="container">
+        <h2>Productos</h2>
         <div className="section">
           <div className="row">
             <div className="col-lg-12 col-md-12 article">
@@ -30,37 +31,42 @@ const ShopSection = (props) => {
                   </div>
                 ) : error ? (
                   <Message variant="alert-danger">{error}</Message>
+                ) : products.length < 1 ? (
+                  <h4>Sin Resultados</h4>
                 ) : (
-                  <>
-                    {products.map((product) => (
-                      <div
-                        className="shop col-lg-4 col-md-6 col-sm-6"
-                        key={product._id}
-                      >
-                        <div className="border-product">
-                          <Link to={`/products/${product._id}`}>
-                            <div className="shopBack">
-                              <img src={product.image} alt={product.name} />
-                            </div>
-                          </Link>
-
-                          <div className="shoptext">
-                            <p>
-                              <Link to={`/products/${product._id}`}>
-                                {product.name}
-                              </Link>
-                            </p>
-
-                            <Rating
-                              value={product.rating}
-                              text={`${product.numReviews} valoraciones`}
-                            />
-                            <h3>Q{product.price}</h3>
+                  products.map((product, i) => (
+                    <div
+                      className="shop col-lg-4 col-md-6 col-sm-6"
+                      key={product._id}
+                    >
+                      <div className="border-product">
+                        <Link to={`/products/${product._id}`}>
+                          <div className="shopBack">
+                            <img src={product.image} alt={product.name} />
                           </div>
+                        </Link>
+
+                        <div className="shoptext">
+                          <p>
+                            <Link to={`/products/${product._id}`}>
+                              <span>Producto:</span> {product.name}
+                            </Link>
+                          </p>
+                          <p>
+                            <Link to={`/products/${product._id}`}>
+                              <span>Categoria:</span> {product.category?.name}
+                            </Link>
+                          </p>
+
+                          <Rating
+                            value={product.rating}
+                            text={`${product.numReviews} valoraciones`}
+                          />
+                          <h3>Q{product.price}</h3>
                         </div>
                       </div>
-                    ))}
-                  </>
+                    </div>
+                  ))
                 )}
 
                 {/* Pagination */}
