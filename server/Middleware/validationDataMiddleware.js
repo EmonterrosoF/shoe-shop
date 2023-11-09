@@ -14,8 +14,15 @@ export const ValidateData =
         req.params = schema.parse(req.params);
       }
 
+      if (type === "file") {
+        req.file = schema.parse(req.file);
+      }
+
       next();
     } catch (err) {
-      return res.status(400).send(err.errors);
+      res.status(400);
+      console.error(err.errors[0]);
+
+      return next(err.errors[0]);
     }
   };
