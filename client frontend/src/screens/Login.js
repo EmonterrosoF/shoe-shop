@@ -6,10 +6,13 @@ import Loading from "../components/LoadingError/Loading";
 import Header from "./../components/Header";
 import { login } from "./../Redux/Actions/userActions";
 
+import ReCAPTCHA from "react-google-recaptcha";
+
 const Login = ({ location, history }) => {
   window.scrollTo(0, 0);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [recapchaValue, setrecapchaValue] = useState(null);
 
   const dispatch = useDispatch();
   const redirect = location.search ? location.search.split("=")[1] : "/";
@@ -25,7 +28,7 @@ const Login = ({ location, history }) => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    dispatch(login(email, password));
+    if (recapchaValue) dispatch(login(email, password));
   };
 
   return (
@@ -50,12 +53,20 @@ const Login = ({ location, history }) => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <button type="submit">Iniciar Sesión</button>
+          <br />
+          <br />
+          <ReCAPTCHA
+            onChange={(value) => setrecapchaValue(value)}
+            sitekey="6LcaFQkpAAAAAHHM7wIUzgN19JRJAbIbRpu5GvhM"
+          ></ReCAPTCHA>
+          <button disabled={!recapchaValue} type="submit">
+            Iniciar Sesión
+          </button>
           <p>
             <Link
               to={redirect ? `/register?redirect=${redirect}` : "/register"}
             >
-              Crear cuenta 
+              Crear cuenta
             </Link>
           </p>
         </form>
