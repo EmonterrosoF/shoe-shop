@@ -14,7 +14,7 @@ import moment from "moment";
 
 const SingleProduct = ({ history, match }) => {
   const [qty, setQty] = useState(1);
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState("");
   const [comment, setComment] = useState("");
 
   const productId = match.params.id;
@@ -33,8 +33,8 @@ const SingleProduct = ({ history, match }) => {
 
   useEffect(() => {
     if (successCreateReview) {
-      alert("Review Submitted");
-      setRating(0);
+      alert("Valoración enviada");
+      setRating("0");
       setComment("");
       dispatch({ type: PRODUCT_CREATE_REVIEW_RESET });
     }
@@ -73,19 +73,27 @@ const SingleProduct = ({ history, match }) => {
               <div className="col-md-6">
                 <div className="product-dtl">
                   <div className="product-info">
-                    <div className="product-name">{product.name}</div>
+                    <div className="product-name">
+                      <span>Producto:</span> {product.name}
+                    </div>
                   </div>
-                  <p>{product.description}</p>
-
+                  <p>
+                    <span className="text-success">Descripcion:</span>{" "}
+                    {product.description}
+                  </p>
+                  <p>
+                    <span className="text-success">Categoria:</span>{" "}
+                    {product.category?.name}
+                  </p>
                   <div className="product-count col-lg-7 ">
                     <div className="flex-box d-flex justify-content-between align-items-center">
                       <h6>Precio</h6>
                       <span>Q{product.price}</span>
                     </div>
                     <div className="flex-box d-flex justify-content-between align-items-center">
-                      <h6>Estado</h6>
+                      <h6>En Stock</h6>
                       {product.countInStock > 0 ? (
-                        <span>En Stock</span>
+                        <span>{product.countInStock}</span>
                       ) : (
                         <span>No disponible</span>
                       )}
@@ -130,7 +138,7 @@ const SingleProduct = ({ history, match }) => {
             {/* RATING */}
             <div className="row my-5">
               <div className="col-md-6">
-                <h6 className="mb-3">Opiniones</h6>
+                <h6 className="mb-3">Valoraciones</h6>
                 {product.reviews.length === 0 && (
                   <Message variant={"alert-info mt-3"}>
                     Sin valoraciones
@@ -151,7 +159,7 @@ const SingleProduct = ({ history, match }) => {
                 ))}
               </div>
               <div className="col-md-6">
-                <h6>Escriba una opinión</h6>
+                <h6>Escriba una Comentario</h6>
                 <div className="my-4">
                   {loadingCreateReview && <Loading />}
                   {errorCreateReview && (
@@ -163,13 +171,14 @@ const SingleProduct = ({ history, match }) => {
                 {userInfo ? (
                   <form onSubmit={submitHandler}>
                     <div className="my-4">
-                      <strong>Clasificación</strong>
+                      <strong>Valoración</strong>
                       <select
+                        required
                         value={rating}
                         onChange={(e) => setRating(e.target.value)}
                         className="col-12 bg-light p-3 mt-2 border-0 rounded"
                       >
-                        <option value="">Select...</option>
+                        <option value="">--Seleccione--</option>
                         <option value="1">1 - Pobre</option>
                         <option value="2">2 - Justa</option>
                         <option value="3">3 - Bueno</option>
@@ -180,6 +189,7 @@ const SingleProduct = ({ history, match }) => {
                     <div className="my-4">
                       <strong>Comentario</strong>
                       <textarea
+                        required
                         row="3"
                         value={comment}
                         onChange={(e) => setComment(e.target.value)}
@@ -202,7 +212,7 @@ const SingleProduct = ({ history, match }) => {
                       <Link to="/login">
                         " <strong>Inicia Sesión</strong> "
                       </Link>{" "}
-                      Escribir una reseña{" "}
+                      para escribir un comentario{" "}
                     </Message>
                   </div>
                 )}
