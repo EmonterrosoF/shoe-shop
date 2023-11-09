@@ -1,26 +1,26 @@
 import {
-  PRODUCT_CREATE_FAIL,
-  PRODUCT_CREATE_REQUEST,
-  PRODUCT_CREATE_SUCCESS,
-  PRODUCT_DELETE_FAIL,
-  PRODUCT_DELETE_REQUEST,
-  PRODUCT_DELETE_SUCCESS,
-  PRODUCT_EDIT_FAIL,
-  PRODUCT_EDIT_REQUEST,
-  PRODUCT_EDIT_SUCCESS,
-  PRODUCT_LIST_FAIL,
-  PRODUCT_LIST_REQUEST,
-  PRODUCT_LIST_SUCCESS,
-  PRODUCT_UPDATE_FAIL,
-  PRODUCT_UPDATE_REQUEST,
-  PRODUCT_UPDATE_SUCCESS,
-} from "../Constants/ProductConstants";
+  CATEGORY_CREATE_FAIL,
+  CATEGORY_CREATE_REQUEST,
+  CATEGORY_CREATE_SUCCESS,
+  CATEGORY_DELETE_FAIL,
+  CATEGORY_DELETE_REQUEST,
+  CATEGORY_DELETE_SUCCESS,
+  CATEGORY_EDIT_FAIL,
+  CATEGORY_EDIT_REQUEST,
+  CATEGORY_EDIT_SUCCESS,
+  CATEGORY_LIST_FAIL,
+  CATEGORY_LIST_REQUEST,
+  CATEGORY_LIST_SUCCESS,
+  CATEGORY_UPDATE_FAIL,
+  CATEGORY_UPDATE_REQUEST,
+  CATEGORY_UPDATE_SUCCESS,
+} from "../Constants/CategoryConstants";
 import axios from "../../http";
 import { logout } from "./userActions";
 
-export const listProducts = () => async (dispatch, getState) => {
+export const listCategories = () => async (dispatch, getState) => {
   try {
-    dispatch({ type: PRODUCT_LIST_REQUEST });
+    dispatch({ type: CATEGORY_LIST_REQUEST });
 
     const {
       userLogin: { userInfo },
@@ -32,9 +32,16 @@ export const listProducts = () => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.get(`/api/products/all`, config);
+    const { data } = await axios.get(`/api/categories/all`, config);
 
-    dispatch({ type: PRODUCT_LIST_SUCCESS, payload: data });
+    data.push({
+      _id: "0",
+      name: "--seleccione--",
+      selected: true,
+      disabled: true,
+    });
+
+    dispatch({ type: CATEGORY_LIST_SUCCESS, payload: data });
   } catch (error) {
     const message =
       error.response && error.response.data.message
@@ -44,16 +51,16 @@ export const listProducts = () => async (dispatch, getState) => {
       dispatch(logout());
     }
     dispatch({
-      type: PRODUCT_LIST_FAIL,
+      type: CATEGORY_LIST_FAIL,
       payload: message,
     });
   }
 };
 
-// DELETE PRODUCT
-export const deleteProduct = (id) => async (dispatch, getState) => {
+// DELETE CATEGORY
+export const deleteCategory = (id) => async (dispatch, getState) => {
   try {
-    dispatch({ type: PRODUCT_DELETE_REQUEST });
+    dispatch({ type: CATEGORY_DELETE_REQUEST });
 
     const {
       userLogin: { userInfo },
@@ -65,9 +72,9 @@ export const deleteProduct = (id) => async (dispatch, getState) => {
       },
     };
 
-    await axios.delete(`/api/products/${id}`, config);
+    await axios.delete(`/api/categories/${id}`, config);
 
-    dispatch({ type: PRODUCT_DELETE_SUCCESS });
+    dispatch({ type: CATEGORY_DELETE_SUCCESS });
   } catch (error) {
     const message =
       error.response && error.response.data.message
@@ -77,16 +84,16 @@ export const deleteProduct = (id) => async (dispatch, getState) => {
       dispatch(logout());
     }
     dispatch({
-      type: PRODUCT_DELETE_FAIL,
+      type: CATEGORY_DELETE_FAIL,
       payload: message,
     });
   }
 };
 
-// CREATE PRODUCT
-export const createProduct = (formData) => async (dispatch, getState) => {
+// CREATE CATEGORY
+export const createCategory = (formData) => async (dispatch, getState) => {
   try {
-    dispatch({ type: PRODUCT_CREATE_REQUEST });
+    dispatch({ type: CATEGORY_CREATE_REQUEST });
 
     const {
       userLogin: { userInfo },
@@ -98,9 +105,9 @@ export const createProduct = (formData) => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.post(`/api/products/`, formData, config);
+    const { data } = await axios.post(`/api/categories/`, formData, config);
 
-    dispatch({ type: PRODUCT_CREATE_SUCCESS, payload: data });
+    dispatch({ type: CATEGORY_CREATE_SUCCESS, payload: data });
   } catch (error) {
     const message =
       error.response && error.response.data.message
@@ -110,16 +117,16 @@ export const createProduct = (formData) => async (dispatch, getState) => {
       dispatch(logout());
     }
     dispatch({
-      type: PRODUCT_CREATE_FAIL,
+      type: CATEGORY_CREATE_FAIL,
       payload: message,
     });
   }
 };
 
-// EDIT PRODUCT
-export const editProduct = (id) => async (dispatch, getState) => {
+// EDIT CATEGORY
+export const editCategory = (id) => async (dispatch, getState) => {
   try {
-    dispatch({ type: PRODUCT_EDIT_REQUEST });
+    dispatch({ type: CATEGORY_EDIT_REQUEST });
 
     const {
       userLogin: { userInfo },
@@ -130,9 +137,8 @@ export const editProduct = (id) => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
-
-    const { data } = await axios.get(`/api/products/edit/${id}`, config);
-    dispatch({ type: PRODUCT_EDIT_SUCCESS, payload: data });
+    const { data } = await axios.get(`/api/categories/${id}`, config);
+    dispatch({ type: CATEGORY_EDIT_SUCCESS, payload: data });
   } catch (error) {
     const message =
       error.response && error.response.data.message
@@ -142,18 +148,18 @@ export const editProduct = (id) => async (dispatch, getState) => {
       dispatch(logout());
     }
     dispatch({
-      type: PRODUCT_EDIT_FAIL,
+      type: CATEGORY_EDIT_FAIL,
       payload: message,
     });
   }
 };
 
-// UPDATE PRODUCT
-export const updateProduct =
+// UPDATE CATEGORY
+export const updateCategory =
   ({ _id, formData }) =>
   async (dispatch, getState) => {
     try {
-      dispatch({ type: PRODUCT_UPDATE_REQUEST });
+      dispatch({ type: CATEGORY_UPDATE_REQUEST });
       const {
         userLogin: { userInfo },
       } = getState();
@@ -166,13 +172,13 @@ export const updateProduct =
       };
 
       const { data } = await axios.put(
-        `/api/products/${_id}`,
+        `/api/categories/${_id}`,
         formData,
         config
       );
 
-      dispatch({ type: PRODUCT_UPDATE_SUCCESS, payload: data });
-      dispatch({ type: PRODUCT_EDIT_SUCCESS, payload: data });
+      dispatch({ type: CATEGORY_UPDATE_SUCCESS, payload: data });
+      dispatch({ type: CATEGORY_EDIT_SUCCESS, payload: data });
     } catch (error) {
       const message =
         error.response && error.response.data.message
@@ -183,7 +189,7 @@ export const updateProduct =
         dispatch(logout());
       }
       dispatch({
-        type: PRODUCT_UPDATE_FAIL,
+        type: CATEGORY_UPDATE_FAIL,
         payload: message,
       });
     }
