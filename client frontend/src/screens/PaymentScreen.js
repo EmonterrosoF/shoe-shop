@@ -36,10 +36,13 @@ const PaymentScreen = ({ history }) => {
               <input
                 className="form-check-input"
                 type="radio"
+                checked
                 value={paymentMethod}
                 onChange={(e) => setPaymentMethod(e.target.value)}
               />
-              <label className="form-check-label">PayPal o Tarejta de Crédito</label>
+              <label className="form-check-label">
+                PayPal o Tarejta de Crédito
+              </label>
             </div>
           </div>
 
