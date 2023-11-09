@@ -10,22 +10,27 @@ import OrderScreen from "./screens/OrderScreen";
 import OrderDetailScreen from "./screens/OrderDetailScreen";
 import AddProduct from "./screens/AddProduct";
 import Login from "./screens/LoginScreen";
-import UsersScreen from "./screens/UsersScreen";
+import CustomersScreen from "./screens/CustomerScreen";
 import ProductEditScreen from "./screens/ProductEditScreen";
 import NotFound from "./screens/NotFound";
 import PrivateRouter from "./PrivateRouter";
 import { useDispatch, useSelector } from "react-redux";
 import { listProducts } from "./Redux/Actions/ProductActions";
 import { listOrders } from "./Redux/Actions/OrderActions";
+import UsersScreen from "./screens/UserScreen";
+import AddUserScreen from "./screens/AddUser";
+import UserEditScreen from "./screens/UserEditScreen";
+import UserPerfileScreen from "./screens/UserPerfileScreen";
 
 function App() {
   const dispatch = useDispatch();
+  // localStorage.removeItem("userInfo");
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
   useEffect(() => {
-    if (userInfo && userInfo.isAdmin) {
+    if (userInfo) {
       dispatch(listProducts());
       dispatch(listOrders());
     }
@@ -37,11 +42,29 @@ function App() {
         <Switch>
           <PrivateRouter path="/" component={HomeScreen} exact />
           <PrivateRouter path="/products" component={ProductScreen} />
+          <PrivateRouter path="/category/:id" component={CategoriesScreen} />
           <PrivateRouter path="/category" component={CategoriesScreen} />
           <PrivateRouter path="/orders" component={OrderScreen} />
           <PrivateRouter path="/order/:id" component={OrderDetailScreen} />
           <PrivateRouter path="/addproduct" component={AddProduct} />
-          <PrivateRouter path="/users" component={UsersScreen} />
+          <PrivateRouter
+            needAdmin={true}
+            path="/users"
+            component={UsersScreen}
+          />
+          <PrivateRouter
+            needAdmin={true}
+            path="/adduser"
+            component={AddUserScreen}
+          />
+          <PrivateRouter
+            needAdmin={true}
+            path="/user/:id/edit"
+            component={UserEditScreen}
+          />
+          <PrivateRouter path="/user/perfile" component={UserPerfileScreen} />
+
+          <PrivateRouter path="/customers" component={CustomersScreen} />
           <PrivateRouter
             path="/product/:id/edit"
             component={ProductEditScreen}
