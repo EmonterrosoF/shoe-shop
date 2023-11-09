@@ -31,27 +31,7 @@ const Header = () => {
 
   return (
     <header className="main-header navbar">
-      <div className="col-search">
-        <form className="searchform">
-          <div className="input-group">
-            <input
-              list="search_terms"
-              type="text"
-              className="form-control"
-              placeholder="Buscar termino"
-            />
-            <button className="btn btn-light bg" type="button">
-              <i className="far fa-search"></i>
-            </button>
-          </div>
-          <datalist id="search_terms">
-            <option value="Products" />
-            <option value="New orders" />
-            <option value="Apple iphone" />
-            <option value="Ahmed Hassan" />
-          </datalist>
-        </form>
-      </div>
+      <div className="col-search"></div>
       <div className="col-nav">
         <button
           className="btn btn-icon btn-mobile me-auto"
@@ -60,21 +40,6 @@ const Header = () => {
           <i className="md-28 fas fa-bars"></i>
         </button>
         <ul className="nav">
-          {/* <li className="nav-item">
-            <Link className={`nav-link btn-icon `} title="Dark mode" to="#">
-              <i className="fas fa-moon"></i>
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link className="nav-link btn-icon" to="#">
-              <i className="fas fa-bell"></i>
-            </Link>
-          </li> */}
-          {/* <li className="nav-item">
-            <Link className="nav-link" to="#">
-              English
-            </Link>
-          </li> */}
           <li className="dropdown nav-item">
             <Link className="dropdown-toggle" data-bs-toggle="dropdown" to="#">
               <img
@@ -84,11 +49,8 @@ const Header = () => {
               />
             </Link>
             <div className="dropdown-menu dropdown-menu-end">
-              <Link className="dropdown-item" to="/">
+              <Link className="dropdown-item" to="/user/perfile">
                 Mi Perfil
-              </Link>
-              <Link className="dropdown-item" to="#">
-                Ajustes
               </Link>
               <Link
                 onClick={logoutHandler}
