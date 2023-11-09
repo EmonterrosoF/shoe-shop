@@ -15,6 +15,7 @@ import PlaceOrderScreen from "./screens/PlaceOrderScreen";
 import OrderScreen from "./screens/OrderScreen";
 import NotFound from "./screens/NotFound";
 import PrivateRouter from "./PrivateRouter";
+import ProductForCategory from "./screens/ProductsForCategory";
 
 const App = () => {
   return (
@@ -29,6 +30,13 @@ const App = () => {
           exact
         />
         <Route path="/products/:id" component={SingleProduct} />
+        <Route
+          path="/category/page/:id/:pagenumber"
+          component={ProductForCategory}
+          exact
+        />
+        <Route path="/category/:id" component={ProductForCategory} />
+
         <Route path="/login" component={Login} />
         <Route path="/register" component={Register} />
         <PrivateRouter path="/profile" component={ProfileScreen} />
