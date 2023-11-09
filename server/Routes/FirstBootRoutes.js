@@ -24,10 +24,10 @@ router.get("/", async (req, res) => {
       await user.save();
     }
 
-    res.send({ message: "exit" });
+    res.send({ message: "Operacion exitosa" });
   } catch (error) {
     console.log(error.message);
-    const err = new Error("internal server error");
+    const err = new Error("Error interno del servidor");
     next(err);
   }
 });
