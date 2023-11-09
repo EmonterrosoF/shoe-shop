@@ -3,13 +3,15 @@ import Sidebar from "./../components/sidebar";
 import Header from "./../components/Header";
 import MainCategories from "./../components/Categories/MainCategories";
 
-const CategoriesScreen = () => {
+const CategoriesScreen = ({ match }) => {
+  const categoryId = match.params.id;
+
   return (
     <>
       <Sidebar />
       <main className="main-wrap">
         <Header />
-        <MainCategories />
+        <MainCategories categoryId={categoryId} />
       </main>
     </>
   );
