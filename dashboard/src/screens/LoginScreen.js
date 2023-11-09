@@ -4,11 +4,14 @@ import Loading from "../components/LoadingError/Loading";
 import Toast from "../components/LoadingError/Toast";
 import { login } from "../Redux/Actions/userActions";
 import Message from "./../components/LoadingError/Error";
+import Recapcha from "react-google-recaptcha";
 
 const Login = ({ history }) => {
   window.scrollTo(0, 0);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const [recapchaValue, setrecapchaValue] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -23,7 +26,8 @@ const Login = ({ history }) => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    dispatch(login(email, password));
+
+    if (recapchaValue) dispatch(login(email, password));
   };
   return (
     <>
@@ -39,6 +43,7 @@ const Login = ({ history }) => {
           <form onSubmit={submitHandler}>
             <div className="mb-3">
               <input
+                required
                 className="form-control"
                 placeholder="Email"
                 type="email"
@@ -48,6 +53,7 @@ const Login = ({ history }) => {
             </div>
             <div className="mb-3">
               <input
+                required
                 className="form-control"
                 placeholder="Password"
                 type="password"
@@ -55,9 +61,18 @@ const Login = ({ history }) => {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-
             <div className="mb-4">
-              <button type="submit" className="btn btn-primary w-100">
+              <Recapcha
+                onChange={(value) => setrecapchaValue(value)}
+                sitekey="6LcaFQkpAAAAAHHM7wIUzgN19JRJAbIbRpu5GvhM"
+              ></Recapcha>
+            </div>
+            <div className="mb-4">
+              <button
+                disabled={!recapchaValue}
+                type="submit"
+                className="btn btn-primary w-100"
+              >
                 Iniciar Sesión
               </button>
             </div>
