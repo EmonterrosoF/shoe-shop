@@ -11,6 +11,8 @@ import {
   payOrderSchema,
 } from "../validations/orderSchemaValidation.js";
 
+import Product from "../Models/ProductModel.js";
+
 const router = express.Router();
 
 // crear una orden de un producto
@@ -30,7 +32,7 @@ router.post(
     try {
       if (orderItems && orderItems.length === 0) {
         res.status(400);
-        const error = new Error("No order items");
+        const error = new Error("La orden no tiene productos");
         next(error);
         return;
       } else {
@@ -48,7 +50,7 @@ router.post(
       }
     } catch (error) {
       console.log(error.message);
-      const err = new Error("internal server error");
+      const err = new Error("Error interno del servidor");
       next(err);
     }
   }
@@ -63,7 +65,7 @@ router.get("/all", protectedUser, async (req, res, next) => {
     res.json(orders);
   } catch (error) {
     console.log(error.message);
-    const err = new Error("internal server error");
+    const err = new Error("Error interno del servidor");
     next(err);
   }
 });
@@ -75,7 +77,7 @@ router.get("/", protectedCustomer, async (req, res, next) => {
     res.json(order);
   } catch (error) {
     console.log(error.message);
-    const err = new Error("internal server error");
+    const err = new Error("Error interno del servidor");
     next(err);
   }
 });
@@ -96,12 +98,12 @@ router.get(
         res.json(order);
       } else {
         res.status(404);
-        const error = new Error("Order Not Found");
+        const error = new Error("Orden no encontrada");
         next(error);
       }
     } catch (error) {
       console.log(error.message);
-      const err = new Error("internal server error");
+      const err = new Error("Error interno del servidor");
       next(err);
     }
   }
@@ -123,12 +125,12 @@ router.get(
         res.json(order);
       } else {
         res.status(404);
-        const error = new Error("Order Not Found");
+        const error = new Error("Orden no encontrada");
         next(error);
       }
     } catch (error) {
       console.log(error.message);
-      const err = new Error("internal server error");
+      const err = new Error("Error interno del servidor");
       next(err);
     }
   }
@@ -142,10 +144,26 @@ router.put(
   protectedCustomer,
   async (req, res, next) => {
     const { id, status, update_time, email_address } = req.body;
-
     try {
       const order = await Order.findById(req.params.id);
       if (order) {
+        for (const item of order.orderItems) {
+          const product = await Product.findById(item.product);
+
+          if (item.qty > product.countInStock) {
+            res.status(400);
+            const err = new Error(
+              `Error La cantidad del producto ${product?.name} es mayor que el stock ${product?.countInStock}`
+            );
+            next(err);
+            return;
+          }
+
+          product.countInStock = product.countInStock - item.qty;
+
+          await product.save();
+        }
+
         order.isPaid = true;
         order.paidAt = Date.now();
         order.paymentResult = {
@@ -154,17 +172,17 @@ router.put(
           update_time,
           email_address,
         };
-
         const updatedOrder = await order.save();
+        console.log("orden actualizada", updatedOrder);
         res.json(updatedOrder);
       } else {
         res.status(404);
-        const error = new Error("Order Not Found");
+        const error = new Error("Orden no encontrada");
         next(error);
       }
     } catch (error) {
       console.log(error.message);
-      const err = new Error("internal server error");
+      const err = new Error("Error interno del servidor");
       next(err);
     }
   }
@@ -187,12 +205,12 @@ router.put(
         res.json(updatedOrder);
       } else {
         res.status(404);
-        const error = new Error("Order Not Found");
+        const error = new Error("Orden no encontrada");
         next(error);
       }
     } catch (error) {
       console.log(error.message);
-      const err = new Error("internal server error");
+      const err = new Error("Error interno del servidor");
       next(err);
     }
   }
