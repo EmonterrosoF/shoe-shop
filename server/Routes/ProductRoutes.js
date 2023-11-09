@@ -1,18 +1,22 @@
+import fs from "node:fs";
 import { Router } from "express";
 import Product from "./../Models/ProductModel.js";
 import {
-  admin,
   protectedCustomer,
   protectedUser,
 } from "../Middleware/AuthMiddleware.js";
 import { ValidateData } from "../Middleware/validationDataMiddleware.js";
 import {
   createProductSchema,
+  fileProductSchema,
   paramsProductSchema,
   queryProductSchema,
   reviewProductSchema,
   updateProductSchema,
 } from "../validations/productSchemaValidation.js";
+import { handlerFile } from "../Middleware/handlerFilesMiddleware.js";
+
+import { v2 as cloudinary } from "cloudinary";
 
 const router = Router();
 
@@ -23,7 +27,7 @@ router.get(
   ValidateData({ schema: queryProductSchema, type: "query" }),
   async (req, res) => {
     try {
-      const pageSize = 5;
+      const pageSize = 10;
       const page = Number(req.query.pageNumber);
       const keyword = req.query.keyword
         ? {
@@ -37,11 +41,12 @@ router.get(
       const products = await Product.find({ ...keyword })
         .limit(pageSize)
         .skip(pageSize * (page - 1))
-        .sort({ _id: -1 });
+        .sort({ _id: -1 })
+        .populate("category", "id name");
       res.json({ products, page, pages: Math.ceil(count / pageSize) });
     } catch (error) {
       console.log(error.message);
-      const err = new Error("internal server error");
+      const err = new Error("Error interno del servidor");
       next(err);
     }
   }
@@ -51,19 +56,22 @@ router.get(
 // pero este endpoint solo puede ser usado por usuarios logueados
 router.get("/all", protectedUser, async (req, res, next) => {
   try {
-    const products = await Product.find({}).sort({ _id: -1 });
+    const products = await Product.find({})
+      .sort({ _id: -1 })
+      .populate("category", "id name");
     res.json(products);
   } catch (error) {
     console.log(error.message);
-    const err = new Error("internal server error");
+    const err = new Error("Error interno del servidor");
     next(err);
   }
 });
 
-// obtiene un unico producto
+// obtiene un unico producto pero solo usuarios permitidos
 router.get(
-  "/:id",
+  "/edit/:id",
   ValidateData({ schema: paramsProductSchema, type: "params" }),
+  protectedUser,
   async (req, res, next) => {
     try {
       const product = await Product.findById(req.params.id);
@@ -71,12 +79,37 @@ router.get(
         res.json(product);
       } else {
         res.status(404);
-        const error = new Error("Product not Found");
+        const error = new Error("Producto no encontrado");
         next(error);
       }
     } catch (error) {
       console.log(error.message);
-      const err = new Error("internal server error");
+      const err = new Error("Error interno del servidor");
+      next(err);
+    }
+  }
+);
+
+// obtiene un unico producto
+router.get(
+  "/:id",
+  ValidateData({ schema: paramsProductSchema, type: "params" }),
+  async (req, res, next) => {
+    try {
+      const product = await Product.findById(req.params.id).populate(
+        "category",
+        "id name"
+      );
+      if (product) {
+        res.json(product);
+      } else {
+        res.status(404);
+        const error = new Error("Producto no encontrado");
+        next(error);
+      }
+    } catch (error) {
+      console.log(error.message);
+      const err = new Error("Error interno del servidor");
       next(err);
     }
   }
@@ -99,7 +132,7 @@ router.post(
         );
         if (alreadyReviewed) {
           res.status(400);
-          const error = new Error("Product already Reviewed");
+          const error = new Error("Producto ya valorado");
           next(error);
           return;
         }
@@ -117,15 +150,15 @@ router.post(
           product.reviews.length;
 
         await product.save();
-        res.status(201).json({ message: "Reviewed Added" });
+        res.status(201).json({ message: "Valoracion agregada" });
       } else {
         res.status(404);
-        const error = new Error("Product not Found");
+        const error = new Error("Producto no encontrado");
         next(error);
       }
     } catch (error) {
       console.log(error.message);
-      const err = new Error("internal server error");
+      const err = new Error("Error interno del servidor");
       next(err);
     }
   }
@@ -141,15 +174,15 @@ router.delete(
       const product = await Product.findById(req.params.id);
       if (product) {
         await product.remove();
-        res.json({ message: "Product deleted" });
+        res.json({ message: "Producto Eliminado" });
       } else {
         res.status(404);
-        const error = new Error("Product not Found");
+        const error = new Error("Producto no encontrado");
         next(error);
       }
     } catch (error) {
       console.log(error.message);
-      const err = new Error("internal server error");
+      const err = new Error("Error interno del servidor");
       next(err);
     }
   }
@@ -158,36 +191,51 @@ router.delete(
 // crear productos pero solo usuarios permitidos
 router.post(
   "/",
+  handlerFile,
+  ValidateData({ schema: fileProductSchema, type: "file" }),
   ValidateData({ schema: createProductSchema }),
   protectedUser,
   async (req, res, next) => {
-    const { name, price, description, image, countInStock } = req.body;
+    const { name, price, description, countInStock, category } = req.body;
+
+    const image = req.file;
     try {
       const productExist = await Product.findOne({ name });
       if (productExist) {
         res.status(400);
-        const error = new Error("Product name already exist");
+        const error = new Error("El nombre del producto ya existe");
         next(error);
       } else {
+        const respImage = await new Promise((resolve, reject) => {
+          cloudinary.uploader
+            .upload_stream({}, (error, result) => {
+              if (error) {
+                reject(error);
+              }
+              resolve(result);
+            })
+            .end(image.buffer);
+        });
         const product = new Product({
           name,
           price,
           description,
-          image,
-          countInStock,
+          image: respImage.secure_url,
+          countInStock: countInStock,
+          category,
         });
         if (product) {
           const createdproduct = await product.save();
           res.status(201).json(createdproduct);
         } else {
           res.status(400);
-          const error = new Error("Invalid product data");
+          const error = new Error("Datos del producto invalidos");
           next(error);
         }
       }
     } catch (error) {
-      console.log(error.message);
-      const err = new Error("internal server error");
+      console.log(error);
+      const err = new Error("Error interno del servidor");
       next(err);
     }
   }
@@ -196,11 +244,14 @@ router.post(
 // actualizar un producto pero solo usuario permitidos
 router.put(
   "/:id",
+  handlerFile,
   ValidateData({ schema: paramsProductSchema, type: "params" }),
   ValidateData({ schema: updateProductSchema }),
   protectedUser,
   async (req, res, next) => {
-    const { name, price, description, image, countInStock } = req.body;
+    const { name, price, description, countInStock, category } = req.body;
+
+    const image = req.file;
 
     try {
       const product = await Product.findById(req.params.id);
@@ -208,19 +259,34 @@ router.put(
         product.name = name || product.name;
         product.price = price || product.price;
         product.description = description || product.description;
-        product.image = image || product.image;
+
+        if (image) {
+          const respImage = await new Promise((resolve, reject) => {
+            cloudinary.uploader
+              .upload_stream({}, (error, result) => {
+                if (error) {
+                  reject(error);
+                }
+                resolve(result);
+              })
+              .end(image.buffer);
+          });
+          product.image = respImage.secure_url;
+        }
+
         product.countInStock = countInStock || product.countInStock;
+        product.category = category || product.category;
 
         const updatedProduct = await product.save();
         res.json(updatedProduct);
       } else {
         res.status(404);
-        const error = new Error("Product not found");
+        const error = new Error("Producto no encontrado");
         next(error);
       }
     } catch (error) {
       console.log(error.message);
-      const err = new Error("internal server error");
+      const err = new Error("Error interno del servidor");
       next(err);
     }
   }
