@@ -44,10 +44,10 @@ const productSchema = mongoose.Schema(
       required: false,
       ref: "Brand",
     },
-    subCategory: {
+    category: {
       type: mongoose.Types.ObjectId,
-      required: false,
-      ref: "SubCategory",
+      required: true,
+      ref: "Category",
     },
     reviews: [reviewSchema],
     rating: {
