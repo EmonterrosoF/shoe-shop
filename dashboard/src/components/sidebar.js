@@ -1,7 +1,10 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
 
 const Sidebar = () => {
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
   return (
     <div>
       <aside className="navbar-aside" id="offcanvas_aside">
@@ -74,11 +77,23 @@ const Sidebar = () => {
                 <span className="text">Ordenes</span>
               </NavLink>
             </li>
+            {userInfo?.isAdmin && (
+              <li className="menu-item">
+                <NavLink
+                  activeClassName="active"
+                  className="menu-link"
+                  to="/users"
+                >
+                  <i className="icon fas fa-user"></i>
+                  <span className="text">Usuarios</span>
+                </NavLink>
+              </li>
+            )}
             <li className="menu-item">
               <NavLink
                 activeClassName="active"
                 className="menu-link"
-                to="/users"
+                to="/customers"
               >
                 <i className="icon fas fa-user"></i>
                 <span className="text">Clientes</span>
