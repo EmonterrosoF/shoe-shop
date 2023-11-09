@@ -38,7 +38,9 @@ function App() {
 
   return (
     <>
-      <Router>
+      <Router
+        basename={process.env.NODE_ENV === "production" ? "dashboard" : ""}
+      >
         <Switch>
           <PrivateRouter path="/" component={HomeScreen} exact />
           <PrivateRouter path="/products" component={ProductScreen} />

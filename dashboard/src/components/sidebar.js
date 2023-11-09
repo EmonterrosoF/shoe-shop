@@ -2,6 +2,8 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
 
+import logoImage from "../assets/logo.png";
+
 const Sidebar = () => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -11,10 +13,10 @@ const Sidebar = () => {
         <div className="aside-top">
           <Link to="/" className="brand-wrap">
             <img
-              src="/images/logo.png"
+              src={logoImage}
               style={{ height: "46" }}
               className="logo"
-              alt="Ecommerce dashboard template"
+              alt="Logo admin"
             />
           </Link>
           <div>

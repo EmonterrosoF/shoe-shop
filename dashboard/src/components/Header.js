@@ -4,6 +4,8 @@ import $ from "jquery";
 import { useDispatch } from "react-redux";
 import { logout } from "../Redux/Actions/userActions";
 
+import favicon from "../assets/favicon.png";
+
 const Header = () => {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -44,8 +46,8 @@ const Header = () => {
             <Link className="dropdown-toggle" data-bs-toggle="dropdown" to="#">
               <img
                 className="img-xs rounded-circle"
-                src="/images/favicon.png"
-                alt="User"
+                src={favicon}
+                alt="Usuario"
               />
             </Link>
             <div className="dropdown-menu dropdown-menu-end">

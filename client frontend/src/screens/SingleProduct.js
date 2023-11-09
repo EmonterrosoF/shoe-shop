@@ -201,7 +201,7 @@ const SingleProduct = ({ history, match }) => {
                         disabled={loadingCreateReview}
                         className="col-12 bg-black border-0 p-3 rounded text-white"
                       >
-                        Entregar
+                        Enviar
                       </button>
                     </div>
                   </form>

@@ -1,3 +1,5 @@
+import path from "node:path";
+
 import express from "express";
 
 import firstBootRoute from "./Routes/FirstBootRoutes.js";
@@ -17,6 +19,9 @@ const app = express();
 app.use(express.json());
 
 app.use(cors());
+
+//archivos estaticos
+app.use(express.static(path.join(process.cwd(), "public")));
 
 // API
 
@@ -43,6 +48,16 @@ app.use("/api/orders", orderRouter);
 app.get("/api/config/paypal", (req, res) => {
   console.log(PAYPAL_CLIENT_ID);
   res.send(PAYPAL_CLIENT_ID);
+});
+
+// para servir el dashboard
+app.get("/dashboard/*", function (req, res) {
+  res.sendFile(path.join(process.cwd(), "public", "dashboard", "index.html"));
+});
+
+// para servir la tienda virtual
+app.get("/*", function (req, res) {
+  res.sendFile(path.join(process.cwd(), "public", "index.html"));
 });
 
 // manejador de errores

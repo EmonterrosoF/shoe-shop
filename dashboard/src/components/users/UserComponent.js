@@ -5,6 +5,8 @@ import { listUser, deleteUser } from "../../Redux/Actions/userActions";
 import Loading from "../LoadingError/Loading";
 import Message from "../LoadingError/Error";
 
+import userImage from "../../assets/user.png";
+
 const UserComponent = () => {
   const dispatch = useDispatch();
 
@@ -79,8 +81,8 @@ const UserComponent = () => {
                     <div className="card-header">
                       <img
                         className="img-md img-avatar"
-                        src="images/user.png"
-                        alt="User pic"
+                        src={userImage}
+                        alt="Usuario imagen"
                       />
                     </div>
                     <div className="card-body">

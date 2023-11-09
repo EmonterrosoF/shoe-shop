@@ -5,6 +5,8 @@ import { listCustomer } from "../../Redux/Actions/CustomerActions";
 import Loading from "../LoadingError/Loading";
 import Message from "../LoadingError/Error";
 
+import favicon from "../../assets/favicon.png";
+
 const CustomerComponent = () => {
   const dispatch = useDispatch();
 
@@ -67,8 +69,8 @@ const CustomerComponent = () => {
                     <div className="card-header">
                       <img
                         className="img-md img-avatar"
-                        src="images/favicon.png"
-                        alt="User pic"
+                        src={favicon}
+                        alt="Cliente imagen"
                       />
                     </div>
                     <div className="card-body">

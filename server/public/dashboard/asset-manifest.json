@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/dashboard/static/css/main.eff4a48f.chunk.css",
+    "main.js": "/dashboard/static/js/main.77cc9a10.chunk.js",
+    "main.js.map": "/dashboard/static/js/main.77cc9a10.chunk.js.map",
+    "runtime-main.js": "/dashboard/static/js/runtime-main.1f4d25e3.js",
+    "runtime-main.js.map": "/dashboard/static/js/runtime-main.1f4d25e3.js.map",
+    "static/css/2.b28305bc.chunk.css": "/dashboard/static/css/2.b28305bc.chunk.css",
+    "static/js/2.d139ffb4.chunk.js": "/dashboard/static/js/2.d139ffb4.chunk.js",
+    "static/js/2.d139ffb4.chunk.js.map": "/dashboard/static/js/2.d139ffb4.chunk.js.map",
+    "index.html": "/dashboard/index.html",
+    "static/css/2.b28305bc.chunk.css.map": "/dashboard/static/css/2.b28305bc.chunk.css.map",
+    "static/css/main.eff4a48f.chunk.css.map": "/dashboard/static/css/main.eff4a48f.chunk.css.map",
+    "static/js/2.d139ffb4.chunk.js.LICENSE.txt": "/dashboard/static/js/2.d139ffb4.chunk.js.LICENSE.txt",
+    "static/media/favicon.58c1ef1c.png": "/dashboard/static/media/favicon.58c1ef1c.png",
+    "static/media/not-found.a38b2c4f.png": "/dashboard/static/media/not-found.a38b2c4f.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.1f4d25e3.js",
+    "static/css/2.b28305bc.chunk.css",
+    "static/js/2.d139ffb4.chunk.js",
+    "static/css/main.eff4a48f.chunk.css",
+    "static/js/main.77cc9a10.chunk.js"
+  ]
+}
