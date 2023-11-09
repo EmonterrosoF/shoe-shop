@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { listUser } from "../../Redux/Actions/userActions";
+import { listUser, deleteUser } from "../../Redux/Actions/userActions";
 import Loading from "../LoadingError/Loading";
 import Message from "../LoadingError/Error";
 
@@ -11,18 +11,27 @@ const UserComponent = () => {
   const userList = useSelector((state) => state.userList);
   const { loading, error, users } = userList;
 
+  const userDelete = useSelector((state) => state.userDelete);
+  const { error: errorDelete, success: successDelete } = userDelete;
+
   useEffect(() => {
     dispatch(listUser());
-  }, [dispatch]);
+  }, [dispatch, successDelete]);
+
+  const deletehandler = (id) => {
+    if (window.confirm("¿Estas seguro?")) {
+      dispatch(deleteUser(id));
+    }
+  };
   return (
     <section className="content-main">
       <div className="content-header">
-        <h2 className="content-title">Clientes</h2>
-        {/* <div>
-          <Link to="#" className="btn btn-primary">
+        <h2 className="content-title">Usuario</h2>
+        <div>
+          <Link to="/adduser" className="btn btn-primary">
             <i className="material-icons md-plus"></i> Crear Nuevo
           </Link>
-        </div> */}
+        </div>
       </div>
 
       <div className="card mb-4">
@@ -55,6 +64,9 @@ const UserComponent = () => {
 
         {/* Card */}
         <div className="card-body">
+          {errorDelete && (
+            <Message variant="alert-danger">{errorDelete}</Message>
+          )}
           {loading ? (
             <Loading />
           ) : error ? (
@@ -67,7 +79,7 @@ const UserComponent = () => {
                     <div className="card-header">
                       <img
                         className="img-md img-avatar"
-                        src="images/favicon.png"
+                        src="images/user.png"
                         alt="User pic"
                       />
                     </div>
@@ -75,14 +87,28 @@ const UserComponent = () => {
                       <h5 className="card-title mt-5">{user.name}</h5>
                       <div className="card-text text-muted">
                         {user.isAdmin === true ? (
-                          <p className="m-0">Admin</p>
+                          <p className="m-0">Rol: Admin</p>
                         ) : (
-                          <p className="m-0">Cliente</p>
+                          <p className="m-0">Rol: Usuario</p>
                         )}
-
                         <p>
                           <a href={`mailto:${user.email}`}>{user.email}</a>
                         </p>
+                      </div>
+                      <div className="row">
+                        <Link
+                          to={`/user/${user._id}/edit`}
+                          className="btn btn-sm btn-outline-success p-2 pb-3 col-md-6"
+                        >
+                          <i className="fas fa-pen"></i>
+                        </Link>
+                        <button
+                          to="#"
+                          onClick={() => deletehandler(user._id)}
+                          className="btn btn-sm btn-outline-danger p-2 pb-3 col-md-6"
+                        >
+                          <i className="fas fa-trash-alt"></i>
+                        </button>
                       </div>
                     </div>
                   </div>
