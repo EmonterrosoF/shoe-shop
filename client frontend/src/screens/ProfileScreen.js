@@ -39,7 +39,7 @@ const ProfileScreen = () => {
                     <strong>{userInfo.name}</strong>
                   </h5>
                   <span className="author-card-position">
-                    <>Afiliado {moment(userInfo.createdAt).format("LL")}</>
+                    <>Registrado {moment(userInfo.createdAt).format("LL")}</>
                   </span>
                 </div>
               </div>
