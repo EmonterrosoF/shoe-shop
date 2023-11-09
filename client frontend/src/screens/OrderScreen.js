@@ -19,7 +19,11 @@ const OrderScreen = ({ match }) => {
   const orderDetails = useSelector((state) => state.orderDetails);
   const { order, loading, error } = orderDetails;
   const orderPay = useSelector((state) => state.orderPay);
-  const { loading: loadingPay, success: successPay } = orderPay;
+  const {
+    loading: loadingPay,
+    success: successPay,
+    error: errorPay,
+  } = orderPay;
 
   if (!loading) {
     const addDecimals = (num) => {
@@ -63,6 +67,11 @@ const OrderScreen = ({ match }) => {
     <>
       <Header />
       <div className="container">
+        {loading ? (
+          <loadingPay />
+        ) : (
+          errorPay && <Message variant="alert-danger">{errorPay}</Message>
+        )}
         {loading ? (
           <Loading />
         ) : error ? (
@@ -194,14 +203,14 @@ const OrderScreen = ({ match }) => {
                       <td>
                         <strong>Productos</strong>
                       </td>
-                      <td>${order.itemsPrice}</td>
+                      <td>Q{order.itemsPrice}</td>
                     </tr>
-                    {/* <tr>
+                    <tr>
                       <td>
                         <strong>Envío</strong>
                       </td>
                       <td>Q{order.shippingPrice}</td>
-                    </tr> */}
+                    </tr>
                     {/* <tr>
                       <td>
                         <strong>Impuesto</strong>
@@ -212,7 +221,7 @@ const OrderScreen = ({ match }) => {
                       <td>
                         <strong>Total</strong>
                       </td>
-                      <td>${order.totalPrice}</td>
+                      <td>Q{order.totalPrice}</td>
                     </tr>
                   </tbody>
                 </table>
