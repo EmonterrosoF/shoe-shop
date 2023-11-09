@@ -42,7 +42,7 @@ export const admin = (req, res, next) => {
     next();
   } else {
     res.status(401);
-    const error = new Error("Not authorized as an Admin");
+    const error = new Error("Solo personal Autorizado");
     next(error);
   }
 };
