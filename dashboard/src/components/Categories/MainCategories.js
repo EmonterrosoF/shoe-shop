@@ -2,7 +2,7 @@ import React from "react";
 import CreateCategory from "./CreateCategory";
 import CategoriesTable from "./CategoriesTable";
 
-const MainCategories = () => {
+const MainCategories = ({ categoryId }) => {
   return (
     <section className="content-main">
       <div className="content-header">
@@ -13,7 +13,7 @@ const MainCategories = () => {
         <div className="card-body">
           <div className="row">
             {/* Create category */}
-            <CreateCategory />
+            <CreateCategory categoryId={categoryId} />
             {/* Categories table */}
             <CategoriesTable />
           </div>
