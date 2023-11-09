@@ -11,6 +11,10 @@ import { toast } from "react-toastify";
 import Message from "../LoadingError/Error";
 import Loading from "../LoadingError/Loading";
 
+import { listCategories } from "../../Redux/Actions/CategoryActions";
+
+import { useHistory } from "react-router-dom";
+
 const ToastObjects = {
   pauseOnFocusLoss: false,
   draggable: false,
@@ -21,11 +25,22 @@ const ToastObjects = {
 const EditProductMain = (props) => {
   const { productId } = props;
 
+  let history = useHistory();
+
   const [name, setName] = useState("");
-  const [price, setPrice] = useState(0);
-  const [image, setImage] = useState("");
-  const [countInStock, setCountInStock] = useState(0);
+  const [price, setPrice] = useState("");
+  const [image, setImage] = useState(undefined);
+  const [countInStock, setCountInStock] = useState("");
   const [description, setDescription] = useState("");
+  const [category, setCategory] = useState("0");
+
+  const categoryList = useSelector((state) => state.categoryList);
+
+  let {
+    // loading: loadingCategory,
+    error: errorCategory,
+    categories,
+  } = categoryList;
 
   const dispatch = useDispatch();
 
@@ -40,9 +55,15 @@ const EditProductMain = (props) => {
   } = productUpdate;
 
   useEffect(() => {
+    dispatch(listCategories());
     if (successUpdate) {
       dispatch({ type: PRODUCT_UPDATE_RESET });
-      toast.success("Product Updated", ToastObjects);
+      toast.success("Producto Actualizado", ToastObjects);
+      const time = async () => {
+        await new Promise((resolve) => setTimeout(resolve, 3500));
+        history.push("/products");
+      };
+      time();
     } else {
       if (!product.name || product._id !== productId) {
         dispatch(editProduct(productId));
@@ -50,22 +71,25 @@ const EditProductMain = (props) => {
         setName(product.name);
         setDescription(product.description);
         setCountInStock(product.countInStock);
-        setImage(product.image);
         setPrice(product.price);
+        setCategory(product?.category || "0");
       }
     }
-  }, [product, dispatch, productId, successUpdate]);
+  }, [product, dispatch, productId, successUpdate, history]);
 
   const submitHandler = (e) => {
     e.preventDefault();
+    const formData = new FormData(); // Crea un objeto FormData
+    formData.append("name", name);
+    formData.append("price", price);
+    formData.append("description", description);
+    formData.append("image", image);
+    formData.append("countInStock", countInStock);
+    formData.append("category", category);
     dispatch(
       updateProduct({
         _id: productId,
-        name,
-        price,
-        description,
-        image,
-        countInStock,
+        formData,
       })
     );
   };
@@ -81,19 +105,27 @@ const EditProductMain = (props) => {
             </Link>
             <h2 className="content-title">Actualizar Producto</h2>
             <div>
-              <button type="submit" className="btn btn-primary">
-                Guardar
+              <button
+                disabled={loadingUpdate}
+                type="submit"
+                className="btn btn-primary"
+              >
+                Actualizar
               </button>
             </div>
           </div>
 
           <div className="row mb-4">
-            <div className="col-xl-8 col-lg-8">
+            <div className="col-xl-8 col-lg-8 container">
               <div className="card mb-4 shadow-sm">
                 <div className="card-body">
                   {errorUpdate && (
                     <Message variant="alert-danger">{errorUpdate}</Message>
                   )}
+                  {errorCategory && (
+                    <Message variant="alert-danger">{errorCategory}</Message>
+                  )}
+                  {/* {loadingCategory && <Loading />} */}
                   {loadingUpdate && <Loading />}
                   {loading ? (
                     <Loading />
@@ -126,7 +158,13 @@ const EditProductMain = (props) => {
                           id="product_price"
                           required
                           value={price}
-                          onChange={(e) => setPrice(e.target.value)}
+                          onChange={(e) =>
+                            setPrice(
+                              Number(e.target.value) <= 0
+                                ? Number(0.99)
+                                : Number(e.target.value)
+                            )
+                          }
                         />
                       </div>
                       <div className="mb-4">
@@ -140,7 +178,13 @@ const EditProductMain = (props) => {
                           id="product_price"
                           required
                           value={countInStock}
-                          onChange={(e) => setCountInStock(e.target.value)}
+                          onChange={(e) =>
+                            setCountInStock(
+                              Number(e.target.value) < 0
+                                ? Number(0)
+                                : Number(e.target.value)
+                            )
+                          }
                         />
                       </div>
                       <div className="mb-4">
@@ -155,14 +199,49 @@ const EditProductMain = (props) => {
                         ></textarea>
                       </div>
                       <div className="mb-4">
-                        <label className="form-label">Imagenes</label>
-                        <input
-                          placeholder="Ingresa la imagen"
-                          className="form-control"
-                          type="text"
-                          value={image}
+                        <label htmlFor="product_title" className="form-label">
+                          *Categoria
+                        </label>
+                        <select
                           required
-                          onChange={(e) => setImage(e.target.value)}
+                          value={category}
+                          onChange={(e) => setCategory(e.target.value)}
+                          className="form-select"
+                        >
+                          {categories.map((category) => (
+                            <option
+                              disabled={category.disabled}
+                              // selected={category.selected}
+                              key={category._id}
+                              value={category._id}
+                            >
+                              {category.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="mb-4">
+                        <label className="form-label">Imagen</label>
+                        <input
+                          className="form-control"
+                          type="file"
+                          accept="image/png,image/jpeg,image/jpg"
+                          multiple={false}
+                          onChange={(e) => {
+                            const file = e.target.files[0]; // Selecciona el primer archivo en caso de que se permita la selección de múltiples archivos
+                            const maxSize = 5 * 1024 * 1024; // 5MB en bytes
+                            const typeAccept = [
+                              "image/png",
+                              "image/jpeg",
+                              "image/jpg",
+                            ].includes(file?.type);
+
+                            if (file && file.size <= maxSize && typeAccept) {
+                              setImage(file);
+                              return;
+                            }
+                            setImage(undefined);
+                          }}
                         />
                       </div>
                     </>
