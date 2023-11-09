@@ -6,6 +6,8 @@ import { errorHandler, notFound } from "./Middleware/Errors.js";
 import userRouter from "./Routes/UserRoutes.js";
 import orderRouter from "./Routes/orderRoutes.js";
 import customerRouter from "./Routes/CustomerRoutes.js";
+import categoryRoute from "./Routes/CategoryRoutes.js";
+
 import cors from "cors";
 
 import { PAYPAL_CLIENT_ID } from "./config.js";
@@ -21,6 +23,9 @@ app.use(cors());
 // ruta que nos sirve para agregar usuario admin por defecto
 // cuando no exista ninguno
 app.use("/api/default", firstBootRoute);
+
+// ruta para los categorias
+app.use("/api/categories", categoryRoute);
 
 // ruta para los productos
 app.use("/api/products", productRoute);
