@@ -189,7 +189,6 @@ router.put(
   protectedUser,
   admin,
   async (req, res, next) => {
-    console.log(req.body);
     try {
       const user = await User.findById(req.params.id);
 

@@ -98,7 +98,7 @@ router.delete(
   async (req, res, next) => {
     try {
       const products = await Product.find({ category: req.params.id });
-      console.log(products);
+
       if (products.length > 0) {
         res.status(400);
         const error = new Error("Error La categoria tiene productos asociados");

@@ -46,7 +46,6 @@ app.use("/api/orders", orderRouter);
 
 // ruta que me retorna el client id de paypal
 app.get("/api/config/paypal", (req, res) => {
-  console.log(PAYPAL_CLIENT_ID);
   res.send(PAYPAL_CLIENT_ID);
 });
 

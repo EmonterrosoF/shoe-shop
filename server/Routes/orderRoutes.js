@@ -173,7 +173,7 @@ router.put(
           email_address,
         };
         const updatedOrder = await order.save();
-        console.log("orden actualizada", updatedOrder);
+
         res.json(updatedOrder);
       } else {
         res.status(404);
